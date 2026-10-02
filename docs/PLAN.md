@@ -62,7 +62,3 @@ Giao diện Sáng/Tối: theo hệ thống, theo giờ (mặt trời mọc/lặn
 - Nút vật lý/vô lăng và MCU không đi qua launcher; chỉ ảnh hưởng nếu launcher gốc nhận các phím đó.
 - Nâng Android 10 → 11 có thể xóa launcher; luôn giữ APK để cài lại.
 - Giữ nguyên launcher gốc, không gỡ, để quay lại nếu lỗi.
-
-## 8. Quyền riêng tư
-
-Mockup hiện tên người mua, số điện thoại và số serial trên màn hình chính. Màn hình xe người khác nhìn thấy được, nên mặc định **ẩn/che** các trường này; giá trị thật nằm trong `local.properties` (không đưa lên Git).
