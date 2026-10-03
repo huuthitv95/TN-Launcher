@@ -38,14 +38,18 @@ fun pkgForCategory(ctx: Context, category: String): String? {
 fun pkgForDial(ctx: Context): String? =
     ctx.packageManager.resolveActivity(Intent(Intent.ACTION_DIAL), 0)?.activityInfo?.packageName?.takeIf { it != "android" }
 
-/** App camera của đầu máy hiển thị tên "360 toàn cảnh". */
-fun find360(apps: List<AppInfo>, override: String): String? =
-    override.takeIf { it.isNotBlank() } ?: apps.firstOrNull { it.label.contains("360") }?.pkg
+/** App camera 360 của đầu SID/Winca (đã đọc từ APK: com.syu.fourcamera2, activity ActFourCamera). */
+const val CAMERA_360_PKG = "com.syu.fourcamera2"
+
+fun find360(ctx: Context, apps: List<AppInfo>, override: String): String? =
+    override.takeIf { it.isNotBlank() }
+        ?: CAMERA_360_PKG.takeIf { ctx.packageManager.getLaunchIntentForPackage(it) != null }
+        ?: apps.firstOrNull { it.label.contains("360") }?.pkg
 
 fun defaultDock(ctx: Context, apps: List<AppInfo>, p: Prefs): List<String> =
     listOfNotNull(
         pkgForCategory(ctx, Intent.CATEGORY_APP_MAPS),
         pkgForDial(ctx),
         pkgForCategory(ctx, Intent.CATEGORY_APP_MUSIC),
-        find360(apps, p.cameraPkg),
+        find360(ctx, apps, p.cameraPkg),
     ).distinct()

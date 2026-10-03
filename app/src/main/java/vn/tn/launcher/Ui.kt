@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-enum class Screen { Home, Apps, Settings }
+enum class Screen { Home, Apps, Info, Settings }
 
 @Composable
 fun T(text: String, size: Int = 16, weight: FontWeight = FontWeight.Normal, secondary: Boolean = false, color: Color? = null) {
@@ -142,7 +142,7 @@ fun HomeScreen(prefs: Prefs, apps: List<AppInfo>, onInfo: () -> Unit) {
             if (prefs.plate.isNotBlank()) T(prefs.plate, 20, secondary = true)
             Spacer(Modifier.weight(1f))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Pill("Camera 360°", Icons.Default.Videocam) { launchPkg(ctx, find360(apps, prefs.cameraPkg)) }
+                Pill("Camera 360°", Icons.Default.Videocam) { launchPkg(ctx, find360(ctx, apps, prefs.cameraPkg)) }
                 Pill("Trợ lái", Icons.Default.DirectionsCar) { launchPkg(ctx, prefs.adasPkg) }
                 Pill("Thông tin xe", Icons.Default.Info, onInfo)
             }
@@ -154,9 +154,67 @@ fun HomeScreen(prefs: Prefs, apps: List<AppInfo>, onInfo: () -> Unit) {
                 Spacer(Modifier.height(8.dp))
                 T(weather?.let { "${it.tempC}°C · ${it.text}" } ?: "Chưa có dữ liệu thời tiết", 18)
             }
-            Column(Modifier.fillMaxWidth().weight(1f).card(t, RoundedCornerShape(28.dp)).padding(24.dp)) {
-                T("Đang phát", 16, secondary = true)
-                T("Chưa có bài hát", 20, FontWeight.Medium)
+            MusicCard(Modifier.fillMaxWidth().weight(1f))
+        }
+    }
+}
+
+@Composable
+fun MusicCard(modifier: Modifier) {
+    val t = LocalTokens.current
+    val ctx = LocalContext.current
+    var np by remember { mutableStateOf<NowPlaying?>(null) }
+    LaunchedEffect(Unit) { while (true) { np = currentMedia(ctx); kotlinx.coroutines.delay(2000) } }
+    Column(modifier.card(t, RoundedCornerShape(28.dp)).padding(24.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        T("Đang phát", 16, secondary = true)
+        val cur = np
+        if (cur == null) {
+            T("Chưa có bài hát", 20, FontWeight.Medium)
+            T("Cài đặt → Cấp quyền đọc thông báo (nhạc)", 14, secondary = true)
+        } else {
+            T(cur.title.ifBlank { "Không rõ tên bài" }, 20, FontWeight.Medium)
+            if (cur.artist.isNotBlank()) T(cur.artist, 16, secondary = true)
+            Spacer(Modifier.weight(1f))
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                MediaBtn(Icons.Default.SkipPrevious) { cur.controller.transportControls.skipToPrevious() }
+                MediaBtn(if (cur.playing) Icons.Default.Pause else Icons.Default.PlayArrow) {
+                    if (cur.playing) cur.controller.transportControls.pause() else cur.controller.transportControls.play()
+                }
+                MediaBtn(Icons.Default.SkipNext) { cur.controller.transportControls.skipToNext() }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MediaBtn(icon: ImageVector, onClick: () -> Unit) {
+    val t = LocalTokens.current
+    Box(Modifier.size(56.dp).glass(t, RoundedCornerShape(28.dp)).clip(RoundedCornerShape(28.dp)).clickable(onClick = onClick), contentAlignment = Alignment.Center) {
+        Image(icon, null, Modifier.size(28.dp), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(t.textPrimary))
+    }
+}
+
+@Composable
+fun InfoScreen(apps: List<AppInfo>) {
+    val t = LocalTokens.current
+    val ctx = LocalContext.current
+    val dm = ctx.resources.displayMetrics
+    val cam = try {
+        val pi = ctx.packageManager.getPackageInfo(CAMERA_360_PKG, 0)
+        "${pi.versionName ?: "?"} (${pi.versionCode})"
+    } catch (e: Exception) { "Chưa cài" }
+    val rows = listOf(
+        "Thiết bị" to "${Build.MANUFACTURER} ${Build.MODEL}",
+        "Android" to "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+        "Màn hình" to "${dm.widthPixels}×${dm.heightPixels} · ${dm.densityDpi} dpi",
+        "App camera 360" to cam,
+        "Số ứng dụng" to apps.size.toString(),
+    )
+    Column(Modifier.fillMaxSize().card(t, RoundedCornerShape(28.dp)).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        T("Thông tin xe", 28, FontWeight.SemiBold)
+        rows.forEach { (k, v) ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                T(k, 18, secondary = true); T(v, 18, FontWeight.Medium)
             }
         }
     }

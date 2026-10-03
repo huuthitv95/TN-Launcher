@@ -61,8 +61,9 @@ fun TnApp(resumeTick: Int) {
                 Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Box(Modifier.weight(1f).fillMaxWidth()) {
                         when (screen) {
-                            Screen.Home -> HomeScreen(prefs, apps) { screen = Screen.Settings }
+                            Screen.Home -> HomeScreen(prefs, apps) { screen = Screen.Info }
                             Screen.Apps -> AppsScreen(apps)
+                            Screen.Info -> InfoScreen(apps)
                             Screen.Settings -> SettingsScreen(mode) { mode = it; prefs.themeMode = it }
                         }
                     }
