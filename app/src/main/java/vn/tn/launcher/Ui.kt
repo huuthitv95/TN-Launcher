@@ -7,6 +7,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-enum class Screen { Home, Apps, Info, Settings }
+enum class Screen { Home, Apps, Info, Settings, Pick }
 
 @Composable
 fun T(text: String, size: Int = 16, weight: FontWeight = FontWeight.Normal, secondary: Boolean = false, color: Color? = null) {
@@ -126,7 +128,7 @@ fun AppsScreen(apps: List<AppInfo>) {
 }
 
 @Composable
-fun HomeScreen(prefs: Prefs, apps: List<AppInfo>, onInfo: () -> Unit) {
+fun HomeScreen(prefs: Prefs, apps: List<AppInfo>, onInfo: () -> Unit, onPick: (String) -> Unit) {
     val t = LocalTokens.current
     val ctx = LocalContext.current
     var now by remember { mutableStateOf(Date()) }
@@ -142,8 +144,11 @@ fun HomeScreen(prefs: Prefs, apps: List<AppInfo>, onInfo: () -> Unit) {
             if (prefs.plate.isNotBlank()) T(prefs.plate, 20, secondary = true)
             Spacer(Modifier.weight(1f))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Pill("Camera 360°", Icons.Default.Videocam) { launchPkg(ctx, find360(ctx, apps, prefs.cameraPkg)) }
-                Pill("Trợ lái", Icons.Default.DirectionsCar) { launchPkg(ctx, prefs.adasPkg) }
+                Pill("Camera 360°", Icons.Default.Videocam) { launchPkg(ctx, slotPkg(ctx, apps, prefs, "camera")) }
+                Pill("Trợ lái", Icons.Default.DirectionsCar) {
+                    val p = slotPkg(ctx, apps, prefs, "adas")
+                    if (p == null) onPick("adas") else launchPkg(ctx, p)
+                }
                 Pill("Thông tin xe", Icons.Default.Info, onInfo)
             }
         }
@@ -233,27 +238,118 @@ private fun Pill(label: String, icon: ImageVector, onClick: () -> Unit) {
 }
 
 @Composable
-fun SettingsScreen(mode: String, onMode: (String) -> Unit) {
+private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val t = LocalTokens.current
+    Box(
+        Modifier.height(48.dp).clip(RoundedCornerShape(24.dp))
+            .then(if (selected) Modifier.background20(t.accent) else Modifier.glass(t, RoundedCornerShape(24.dp)))
+            .clickable(onClick = onClick).padding(horizontal = 22.dp),
+        contentAlignment = Alignment.Center,
+    ) { T(label, 16, FontWeight.Medium, color = if (selected) Color.White else null) }
+}
+
+@Composable
+private fun Field(label: String, value: String, onChange: (String) -> Unit) {
+    val t = LocalTokens.current
+    Row(Modifier.fillMaxWidth().height(56.dp).glass(t, RoundedCornerShape(20.dp)).padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        Box(Modifier.width(120.dp)) { T(label, 16, secondary = true) }
+        androidx.compose.foundation.text.BasicTextField(
+            value = value, onValueChange = onChange, singleLine = true,
+            textStyle = TextStyle(color = t.textPrimary, fontSize = 18.sp), modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+fun SettingsScreen(mode: String, onMode: (String) -> Unit, prefs: Prefs, apps: List<AppInfo>, onPick: (String) -> Unit) {
     val t = LocalTokens.current
     val ctx = LocalContext.current
-    Column(Modifier.fillMaxSize().card(t, RoundedCornerShape(28.dp)).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    val cities = listOf(
+        "Hà Nội" to (21.0285f to 105.8542f),
+        "TP.HCM" to (10.8231f to 106.6297f),
+        "Đà Nẵng" to (16.0544f to 108.2022f),
+        "Cần Thơ" to (10.0452f to 105.7469f),
+        "Hải Phòng" to (20.8449f to 106.6881f),
+    )
+    Column(
+        Modifier.fillMaxSize().card(t, RoundedCornerShape(28.dp)).verticalScroll(rememberScrollState()).padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
         T("Cài đặt", 28, FontWeight.SemiBold)
+
         T("Giao diện", 16, secondary = true)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            listOf("auto" to "Tự động", "light" to "Sáng", "dark" to "Tối").forEach { (k, v) ->
-                val sel = mode == k
-                Box(
-                    Modifier.height(56.dp).clip(RoundedCornerShape(28.dp))
-                        .then(if (sel) Modifier.background20(t.accent) else Modifier.glass(t, RoundedCornerShape(28.dp)))
-                        .clickable { onMode(k) }.padding(horizontal = 28.dp),
-                    contentAlignment = Alignment.Center,
-                ) { T(v, 18, FontWeight.Medium, color = if (sel) Color.White else null) }
+            listOf("auto" to "Tự động", "light" to "Sáng", "dark" to "Tối").forEach { (k, v) -> Chip(v, mode == k) { onMode(k) } }
+        }
+
+        T("Xe", 16, secondary = true)
+        Field("Tên xe", prefs.vehicleName) { prefs.updateVehicle(it, prefs.plate) }
+        Field("Biển số", prefs.plate) { prefs.updateVehicle(prefs.vehicleName, it) }
+
+        T("Thành phố (thời tiết)", 16, secondary = true)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            cities.forEach { (name, c) ->
+                Chip(name, kotlin.math.abs(prefs.lat - c.first) < 0.01f && kotlin.math.abs(prefs.lon - c.second) < 0.01f) { prefs.setCity(c.first, c.second) }
             }
         }
+
+        T("Gán ứng dụng cho các nút", 16, secondary = true)
+        listOf("camera", "adas", "tpms", "map", "music", "dock").forEach { k ->
+            val cur = if (k == "dock") {
+                if (prefs.dock.isEmpty()) "Mặc định" else "${prefs.dock.size} ứng dụng"
+            } else {
+                val p = slotPkg(ctx, apps, prefs, k)
+                apps.firstOrNull { it.pkg == p }?.label ?: "Chưa gán"
+            }
+            Row(
+                Modifier.fillMaxWidth().height(56.dp).clip(RoundedCornerShape(20.dp)).clickable { onPick(k) }.padding(horizontal = 12.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween,
+            ) { T(slotTitle(k), 18); T(cur, 18, secondary = true) }
+        }
+
+        T("Hệ thống", 16, secondary = true)
         Pill("Đặt launcher mặc định", Icons.Default.Home) { launchIntent(ctx, Intent(Settings.ACTION_HOME_SETTINGS)) }
         Pill("Cấp quyền đọc thông báo (nhạc)", Icons.Default.MusicNote) { launchIntent(ctx, Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")) }
         Pill("Cài đặt hệ thống", Icons.Default.Settings) { launchIntent(ctx, Intent(Settings.ACTION_SETTINGS)) }
-        Spacer(Modifier.weight(1f))
-        T("Android ${Build.VERSION.RELEASE} · TN Launcher ${"0.1.0"}", 14, secondary = true)
+        T("Android ${Build.VERSION.RELEASE} · TN Launcher 0.2.0", 14, secondary = true)
+    }
+}
+
+@Composable
+fun PickScreen(key: String, apps: List<AppInfo>, prefs: Prefs, onDone: () -> Unit) {
+    val t = LocalTokens.current
+    val isDock = key == "dock"
+    Column(Modifier.fillMaxSize().card(t, RoundedCornerShape(28.dp)).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        T(if (isDock) "Chọn tối đa 5 ứng dụng cho Dock" else "Chọn ứng dụng cho: ${slotTitle(key)}", 24, FontWeight.SemiBold)
+        LazyVerticalGrid(GridCells.Adaptive(120.dp), Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(apps, key = { it.pkg }) { a ->
+                val sel = if (isDock) a.pkg in prefs.dock else prefs.slots[key] == a.pkg
+                Column(
+                    Modifier.clip(RoundedCornerShape(16.dp))
+                        .then(if (sel) Modifier.background(t.accent.copy(alpha = 0.25f)) else Modifier)
+                        .clickable {
+                            if (isDock) {
+                                if (a.pkg in prefs.dock) prefs.dock.remove(a.pkg) else if (prefs.dock.size < 5) prefs.dock.add(a.pkg)
+                                prefs.saveDock()
+                            } else {
+                                prefs.setSlot(key, a.pkg)
+                                onDone()
+                            }
+                        }.padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Image(a.icon, a.label, Modifier.size(64.dp).clip(RoundedCornerShape(15.dp)))
+                    Spacer(Modifier.height(6.dp))
+                    T(a.label, 14, secondary = true)
+                }
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Pill("Dùng mặc định", Icons.Default.Close) {
+                if (isDock) { prefs.dock.clear(); prefs.saveDock() } else prefs.setSlot(key, "")
+                onDone()
+            }
+            Pill("Xong", Icons.Default.Check, onDone)
+        }
     }
 }

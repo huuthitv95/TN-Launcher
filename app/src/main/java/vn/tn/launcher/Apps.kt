@@ -46,10 +46,36 @@ fun find360(ctx: Context, apps: List<AppInfo>, override: String): String? =
         ?: CAMERA_360_PKG.takeIf { ctx.packageManager.getLaunchIntentForPackage(it) != null }
         ?: apps.firstOrNull { it.label.contains("360") }?.pkg
 
+private fun List<AppInfo>.byLabel(vararg keys: String): String? =
+    firstOrNull { app -> keys.any { app.label.contains(it, ignoreCase = true) } }?.pkg
+
+/** App cho từng nút: ưu tiên người dùng đã gán, sau đó tự nhận diện theo hệ thống hoặc tên ứng dụng. */
+fun slotPkg(ctx: Context, apps: List<AppInfo>, p: Prefs, key: String): String? {
+    p.slots[key]?.takeIf { it.isNotBlank() }?.let { return it }
+    return when (key) {
+        "camera" -> find360(ctx, apps, "")
+        "adas" -> apps.byLabel("adas", "trợ lái")
+        "tpms" -> apps.byLabel("tpms", "áp suất lốp")
+        "map" -> pkgForCategory(ctx, Intent.CATEGORY_APP_MAPS) ?: apps.byLabel("vietmap", "maps")
+        "music" -> pkgForCategory(ctx, Intent.CATEGORY_APP_MUSIC) ?: apps.byLabel("zing", "nhạc", "music")
+        else -> null
+    }
+}
+
+fun slotTitle(key: String) = when (key) {
+    "camera" -> "Camera 360°"
+    "adas" -> "Trợ lái"
+    "tpms" -> "Áp suất lốp"
+    "map" -> "Bản đồ"
+    "music" -> "Âm nhạc"
+    "dock" -> "Dock"
+    else -> key
+}
+
 fun defaultDock(ctx: Context, apps: List<AppInfo>, p: Prefs): List<String> =
     listOfNotNull(
-        pkgForCategory(ctx, Intent.CATEGORY_APP_MAPS),
+        slotPkg(ctx, apps, p, "map"),
         pkgForDial(ctx),
-        pkgForCategory(ctx, Intent.CATEGORY_APP_MUSIC),
-        find360(ctx, apps, p.cameraPkg),
+        slotPkg(ctx, apps, p, "music"),
+        slotPkg(ctx, apps, p, "camera"),
     ).distinct()

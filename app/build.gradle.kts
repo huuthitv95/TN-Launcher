@@ -10,8 +10,8 @@ android {
         applicationId = "vn.tn.launcher"
         minSdk = 29
         targetSdk = 29 // giữ 29 để không bị giới hạn xem danh sách ứng dụng (package visibility)
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
     }
     buildTypes {
         release {
