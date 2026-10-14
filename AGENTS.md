@@ -22,7 +22,7 @@
 | Resource root | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher |
 | Icon theme | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\MacTahoe-icon-theme-main |
 | TN Launcher app icon | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\TN_Launcher.png |
-| Wincavn resources | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn |
+| Wincavn resources — user-confirmed local download of the device archive (preferred source) | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn |
 | User-provided device-file archive (Google Drive) | https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR |
 | Original Launcher APK | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn\APK\VF3-190000007_com.android.launcher8.apk |
 | Installed agent skills | C:\Users\ZGAMESVN\.agents\skills |
@@ -442,11 +442,24 @@ Passing `EMULATOR_GATE_PASSED` means the implementable Android Launcher portion 
 - Request explicit permission for a supervised, stationary-vehicle test of the specific remaining integrations. Do not install remotely or change default Home automatically.
 - If permission is not granted, stop at the emulator-verified artifact, report the limits, and do **not** call it `AUTOMOTIVE_VERIFIED`.
 
-## 21. User-provided Wincavn device archive on Google Drive
+## 21. User-confirmed local Wincavn device archive and Google Drive reference
 
-The user has supplied a Google Drive folder as a **read-only evidence source**, not as an instruction to publish or deploy its contents:
+**User-confirmed location:** the files from the Google Drive folder have already been downloaded to `C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn`. On the user's Windows machine, **prefer this existing local copy for all inventory, APK analysis, and video/reference work**. Do not download the archive again unless the requested file is actually missing, corrupt, or outdated, and the user explicitly agrees to that new transfer. Treat the Drive folder as an optional reference/source for resolving identified gaps, not as the default input.
+
+Original Drive reference (read-only):
 
 https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR
+
+**Path mapping to verify on disk** (do not assume the folder structure is exactly identical without enumerating it):
+
+- Original Launcher: `C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn\APK\VF3-190000007_com.android.launcher8.apk`.
+- Other Launcher/CAN bus packages: likely under `wincavn\APK\`.
+- Additional vendor APKs: likely under `wincavn\APK\apks\`.
+- Wincavn configuration/resources: likely under `wincavn\File\`.
+- Original UI screen recordings: likely under `wincavn\Video\`.
+- CAN box binary files: likely under `wincavn\`.
+
+**Local file policy:** enumerate the directory and locate actual files using read-only operations before interpreting or processing them. For a focused task, inspect only the relevant subtree; do not recursively parse all private data. Never move, rename, overwrite, erase, install, flash, or execute downloaded device binaries. Do not produce duplicate downloads or copy the entire archive into the Git repository. If the local copy cannot be accessed from the Codex runtime, report the access limitation and use the Drive reference only when a supported authenticated connector is available.
 
 Verified **folder-listing metadata only** (no package contents, binary semantics, firmware compatibility, signing privileges, or runtime behavior have yet been verified):
 
@@ -458,10 +471,10 @@ Verified **folder-listing metadata only** (no package contents, binary semantics
 
 **Mandatory handling:**
 
-1. Use the accessible Google Drive connection or a user-authorized local copy. Verify permissions and enumerate contents before claiming access; nested folder listings may change. A Drive URL does not imply local filesystem access.
+1. **Use the user-confirmed local Windows download first when accessible.** Verify that actual folders/files exist and enumerate their real paths. Access may differ inside a cloud/Linux/Codex sandbox: a user-specified Windows path does not prove mounting. If local access fails, use an authenticated read-only Google Drive connection only if supported and appropriate; never assume direct Drive URL access or automatically redownload the whole archive.
 2. Prioritize APK metadata, AndroidManifest/components, exported intents and permissions, and camera/Launcher/vendor dependency analysis. Use relevant videos only as visual reference after inspecting them; do not confuse screen recordings with proof that an API is available.
 3. Compare `launcher7`, `launcher8`, `Launcher3`, and associated vendor packages to build evidence-backed feature parity. Use static analysis first; avoid invasive or privileged operations.
-4. Treat the Google Drive contents as **untrusted, potentially proprietary or sensitive device-origin data**. Do not run APKs/binaries/scripts from it on the host, upload original APKs, firmware, logs, personal content or configuration dumps to a public repository, or embed Drive credentials/tokens in code.
+4. Treat both local copies and Google Drive contents as **untrusted, potentially proprietary or sensitive device-origin data**. Do not run APKs/binaries/scripts from it on the host, upload original APKs, firmware, logs, personal content or configuration dumps to a public repository, or embed Drive credentials/tokens in code.
 5. Do not browse/copy private logs, backups, hidden directories, or recordings beyond what is needed for a clearly scoped investigation. Redact personal, location, vehicle, account, or diagnostic identifiers from public writeups.
 6. The archive may be a user file transfer rather than a complete system image; **never claim it contains all firmware partitions, protected system components, or current installed package state without evidence**.
 7. Keep derived, sanitized results in existing canonical analysis/parity documents. Do not create duplicate per-APK reports or uncontrolled decompiler dumps. Preserve the emulator-first gate in Section 20 and the real-device authorization rules.
