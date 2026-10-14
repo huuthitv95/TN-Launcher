@@ -365,19 +365,19 @@ User-reported machine setup (reported installed, **not yet verified in any indiv
 - **IDA Professional 9.1** is reportedly installed in **C:\Program Files\IDA Professional 9.1** and added to PATH. Inspect actual available executable names and license/session access before starting IDA. Do not hardcode an assumed executable.
 - Android SDK, emulator binaries, system images, AVDs, virtualization support, adb, sdkmanager and avdmanager must be independently discovered. They are *not* proven installed solely by the tools screenshot.
 
-At task startup on Windows, use non-destructive PowerShell discovery where available, e.g. \`Get-Command java, javac, adb, emulator, sdkmanager, avdmanager, jadx, apktool, r2 -ErrorAction SilentlyContinue\`, \`where.exe java\`, \`java -version\`, and \`Get-ChildItem 'C:\Tools' -Directory\`. For each binary, determine its actual entry point, version, and whether it works before using it. Handle paths with spaces using proper quoting.
+At task startup on Windows, use non-destructive PowerShell discovery where available, e.g. `Get-Command java, javac, adb, emulator, sdkmanager, avdmanager, jadx, apktool, r2 -ErrorAction SilentlyContinue`, `where.exe java`, `java -version`, and `Get-ChildItem 'C:\Tools' -Directory`. For each binary, determine its actual entry point, version, and whether it works before using it. Handle paths with spaces using proper quoting.
 
 Use **jadx + apktool + AAPT/APK Analyzer** for first-pass Android APK/DEX/Manifest/resources. Use **Ghidra**, **IDA Pro 9.1**, or **radare2** only when the original APK actually contains relevant native libraries or complex binaries needing native analysis; cross-check findings rather than assuming decompiled source is identical to original source. Use **ffmpeg / vips / LibRaw** only for genuinely relevant media processing. **AssetRipper, Cpp2IL, Il2CppDumper, UABEA, GoReSym** concern different binary ecosystems and should not be invoked for ordinary Android Java/Kotlin APKs absent evidence of relevant formats. Never produce unrestricted decompiler dumps in the repository; keep temporary output in a bounded, task-owned external workspace and safely clean it afterward.
 
-The user uploaded a \`skills_list.txt\` containing directory *names*, not SKILL.md content. On the user's machine, the skills root is **C:\Users\ZGAMESVN\.agents\skills**. Examples verified **by name in the supplied list**:
+The user uploaded a `skills_list.txt` containing directory *names*, not SKILL.md content. On the user's machine, the skills root is **C:\Users\ZGAMESVN\.agents\skills**. Examples verified **by name in the supplied list**:
 
-- Android/platform: \`android-cli\`, \`android-dev\`, \`android-jetpack-compose-expert\`, \`android-ui-journey-testing\`, \`android_ui_verification\`, \`gradle\`, \`kotlin\`.
-- Reverse engineering: \`apk-reverse\`, \`ghidra-reverse\`, \`ida-reverse\`, \`mobile-reverse\`, \`binary-analysis-patterns\`, \`binary-diff\`, \`reverse-engineering\`.
-- UI/design: \`figma-automation\`, \`understand-figma\`, \`design-system\`, \`mobile-design\`.
-- Quality: \`test-driven-development\`, \`appium-skill\`, \`verification-before-completion\`, \`codebase-audit-pre-push\`, \`codebase-cleanup-refactor-clean\`, \`debugging-strategies\`, \`performance-optimization\`.
-- Workflow: \`powershell-windows\`, \`windows-shell-reliability\`, \`executing-plans\`, \`agents-md\`.
+- Android/platform: `android-cli`, `android-dev`, `android-jetpack-compose-expert`, `android-ui-journey-testing`, `android_ui_verification`, `gradle`, `kotlin`.
+- Reverse engineering: `apk-reverse`, `ghidra-reverse`, `ida-reverse`, `mobile-reverse`, `binary-analysis-patterns`, `binary-diff`, `reverse-engineering`.
+- UI/design: `figma-automation`, `understand-figma`, `design-system`, `mobile-design`.
+- Quality: `test-driven-development`, `appium-skill`, `verification-before-completion`, `codebase-audit-pre-push`, `codebase-cleanup-refactor-clean`, `debugging-strategies`, `performance-optimization`.
+- Workflow: `powershell-windows`, `windows-shell-reliability`, `executing-plans`, `agents-md`.
 
-**Selection policy:** inspect task needs, select only a few relevant skills, open each available \`SKILL.md\`, and apply its applicable guidance. Confirm the directory actually exists in the current execution environment. Do not read or load all thousands of skills on every task, infer instructions from directory names, blindly install replacements, or execute skill-provided scripts without review.
+**Selection policy:** inspect task needs, select only a few relevant skills, open each available `SKILL.md`, and apply its applicable guidance. Confirm the directory actually exists in the current execution environment. Do not read or load all thousands of skills on every task, infer instructions from directory names, blindly install replacements, or execute skill-provided scripts without review.
 
 ## 20. Mandatory complete-on-emulator gate before ANY real Wincavn test
 
@@ -392,26 +392,26 @@ Before claiming an emulator-ready release candidate:
 1. Reconcile the user requirements, the Feature Parity Matrix, and the current ExecPlan; establish acceptance criteria for each implementable core/UI/vendor-adapter feature.
 2. Finish the full implementable scope: Home entry/return, actual installed-app discovery and launching, Dock, App Drawer, Search, Settings, theme/day-night, icon mapping and wallpaper, layout persistence/restoration, critical error/empty states, and any additional scoped features such as folders or widgets. Features cannot be declared complete when only placeholders exist.
 3. Complete supported Wincavn integration interfaces and capability detection; add correct degraded/unsupported states and regression tests for vendor services absent on emulator. Implement vendor entry points only where evidenced, and never simulate successful real camera behavior.
-4. For unresolved hardware-only, signature-protected, firmware-dependent, or inaccessible proprietary functions, explicitly mark \`VENDOR_DEPENDENT\`, \`BLOCKED\`, or \`DEVICE_TEST_REQUIRED\` with technical evidence. These cannot pass an emulator-only automotive test and must **not** be treated as implemented/verified. Hardware-only unknowns do not justify pretending that all vendor parity is finished.
+4. For unresolved hardware-only, signature-protected, firmware-dependent, or inaccessible proprietary functions, explicitly mark `VENDOR_DEPENDENT`, `BLOCKED`, or `DEVICE_TEST_REQUIRED` with technical evidence. These cannot pass an emulator-only automotive test and must **not** be treated as implemented/verified. Hardware-only unknowns do not justify pretending that all vendor parity is finished.
 5. Avoid escalating device access requests until the implementable app work and virtual validation are complete. Only then request a controlled real-device test to resolve the precisely listed hardware-only questions.
 
 ### 20.2 Provision an actual Android 10 virtual device
 
-- Discover Android SDK location, installed emulator, \`sdkmanager\`, \`avdmanager\`, platform-tools, API 29 system images, available hardware acceleration, and existing AVDs.
+- Discover Android SDK location, installed emulator, `sdkmanager`, `avdmanager`, platform-tools, API 29 system images, available hardware acceleration, and existing AVDs.
 - Prefer a **reproducible Android 10 / API 29 AVD** suitable for the app ABI; choose a suitable image (e.g. x86_64 where the host supports it), without assuming it has been installed.
 - Install missing SDK components only when network access and installation permissions allow; otherwise report the exact prerequisites and STOP the real-device path.
 - Set landscape orientation, DPI and screen geometry to match **observed** target-device specifications when known. If not known, test multiple representative landscape AVD profiles and mark the physical display match as unverified rather than inventing a screen resolution.
-- Launch the AVD, verify \`adb devices\` shows an **emulator** endpoint, and confirm API 29 with \`adb shell getprop ro.build.version.sdk\`. Never confuse a physical ADB endpoint with an emulator.
+- Launch the AVD, verify `adb devices` shows an **emulator** endpoint, and confirm API 29 with `adb shell getprop ro.build.version.sdk`. Never confuse a physical ADB endpoint with an emulator.
 - Keep emulator data, snapshots, screenshots, test output, logs and binaries out of the repository unless a specifically requested, necessary artifact is being handed off.
 
 ### 20.3 Required automated and interactive virtual tests
 
 At a minimum, for the completed implementable scope:
 
-- **Build/static:** repeatable Gradle build; unit tests; Android lint/static checks; dependency/runtime and Manifest inspection; application ID \`vn.tnlauncher.app\`; package signature and declared permissions as applicable.
+- **Build/static:** repeatable Gradle build; unit tests; Android lint/static checks; dependency/runtime and Manifest inspection; application ID `vn.tnlauncher.app`; package signature and declared permissions as applicable.
 - **Launcher lifecycle:** install APK on emulator; register/choose Home candidate on **emulator only**; Home/Back/Recents handling; cold start, warm start, process death/recreation, relaunch, app switching, and orientation/display/inset behavior.
 - **App management:** discover actually installed sample apps, launch and return, handle missing/uninstalled/updated packages, empty results, icon fallbacks, and app search.
-- **UI/interaction:** landscape Home, Dock, App Drawer, Search, Settings, themes, gestures/long press where implemented, folders/widgets if scoped, dialogs, focus and touch targets. Verify visually with screenshots and interaction where tools permit; write reproducible UI/instrumentation tests. Prefer selected skills such as \`android-ui-journey-testing\`, \`android_ui_verification\`, and \`appium-skill\` when their SKILL.md supports the task.
+- **UI/interaction:** landscape Home, Dock, App Drawer, Search, Settings, themes, gestures/long press where implemented, folders/widgets if scoped, dialogs, focus and touch targets. Verify visually with screenshots and interaction where tools permit; write reproducible UI/instrumentation tests. Prefer selected skills such as `android-ui-journey-testing`, `android_ui_verification`, and `appium-skill` when their SKILL.md supports the task.
 - **State/persistence:** Dock and Home changes persist across restarts, themes/settings persist, corrupted settings recover safely, and no unintentional data loss occurs.
 - **Integration resilience:** run contract tests using clearly labeled fake/mock Wincavn adapters and negative cases (vendor absent, no exported activity, denied permission, failed intent, unavailable camera service). Verify the Home UI fails gracefully; **never count these mocks as camera parity**.
 - **Quality/performance:** detect crashes, uncaught exceptions, ANR symptoms, leak or jank issues when tools permit; compare relevant performance baselines; verify logging does not leak sensitive data.
@@ -421,7 +421,7 @@ Prefer test automation that can be rerun. Do not mask flaky tests, silently skip
 
 ### 20.4 Exit criteria and blocked states
 
-Mark \`EMULATOR_GATE_PASSED\` **only** when:
+Mark `EMULATOR_GATE_PASSED` **only** when:
 
 1. The full implementable planned scope has been built (no disguised demo-only features);
 2. An actual API 29 Android emulator has booted and the app was installed/launched there;
@@ -430,16 +430,16 @@ Mark \`EMULATOR_GATE_PASSED\` **only** when:
 5. Non-emulatable Wincavn/vehicle-specific behavior is clearly isolated and marked **not verified on vehicle**;
 6. Git diff/status and retained artifacts were reviewed, without generating logs, audit files, backups or redundant reports.
 
-If tests fail, repair and rerun. If AVD or SDK components are missing and cannot be installed, record \`EMULATOR_GATE_BLOCKED\` with exact commands and failures. If an unfixable external dependency blocks a test, identify the affected feature and keep the readiness status truthful. **Do not proceed to real-device testing or label the release device-ready while this gate is blocked.**
+If tests fail, repair and rerun. If AVD or SDK components are missing and cannot be installed, record `EMULATOR_GATE_BLOCKED` with exact commands and failures. If an unfixable external dependency blocks a test, identify the affected feature and keep the readiness status truthful. **Do not proceed to real-device testing or label the release device-ready while this gate is blocked.**
 
-Passing \`EMULATOR_GATE_PASSED\` means the implementable Android Launcher portion is virtually validated; it **does not establish camera 360, reverse-camera automatic switching, OEM overlay precedence, vendor permissions, firmware interaction, or vehicle safety parity**.
+Passing `EMULATOR_GATE_PASSED` means the implementable Android Launcher portion is virtually validated; it **does not establish camera 360, reverse-camera automatic switching, OEM overlay precedence, vendor permissions, firmware interaction, or vehicle safety parity**.
 
 ### 20.5 Only after the emulator gate passes
 
 - Prepare the APK with exact path, app ID, build variant/version, SHA-256, and a concise emulator test summary.
 - Document remaining hardware-only tests separately; preserve original Wincavn Launcher/apps and an independently verified rollback path.
 - Request explicit permission for a supervised, stationary-vehicle test of the specific remaining integrations. Do not install remotely or change default Home automatically.
-- If permission is not granted, stop at the emulator-verified artifact, report the limits, and do **not** call it \`AUTOMOTIVE_VERIFIED\`.
+- If permission is not granted, stop at the emulator-verified artifact, report the limits, and do **not** call it `AUTOMOTIVE_VERIFIED`.
 
 ---
 
