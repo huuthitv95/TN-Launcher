@@ -23,6 +23,7 @@
 | Icon theme | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\MacTahoe-icon-theme-main |
 | TN Launcher app icon | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\TN_Launcher.png |
 | Wincavn resources | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn |
+| User-provided device-file archive (Google Drive) | https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR |
 | Original Launcher APK | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn\APK\VF3-190000007_com.android.launcher8.apk |
 | Installed agent skills | C:\Users\ZGAMESVN\.agents\skills |
 
@@ -440,6 +441,30 @@ Passing `EMULATOR_GATE_PASSED` means the implementable Android Launcher portion 
 - Document remaining hardware-only tests separately; preserve original Wincavn Launcher/apps and an independently verified rollback path.
 - Request explicit permission for a supervised, stationary-vehicle test of the specific remaining integrations. Do not install remotely or change default Home automatically.
 - If permission is not granted, stop at the emulator-verified artifact, report the limits, and do **not** call it `AUTOMOTIVE_VERIFIED`.
+
+## 21. User-provided Wincavn device archive on Google Drive
+
+The user has supplied a Google Drive folder as a **read-only evidence source**, not as an instruction to publish or deploy its contents:
+
+https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR
+
+Verified **folder-listing metadata only** (no package contents, binary semantics, firmware compatibility, signing privileges, or runtime behavior have yet been verified):
+
+- Folder \`APK\`: \`Launcher3.apk\`, \`190000007_com.android.launcher7.apk\`, \`VF3-190000007_com.android.launcher8.apk\`, \`190000000_com.syu.canbus.apk\`; its \`apks\` subfolder contains 30 vendor APK files as observed in the accessible listing.
+- Relevant APK candidates by filename include \`com.syu.fourcamera2.apk\`, \`com.syu.rightcamera.apk\`, \`com.syu.doublecamera.apk\`, \`com.syu.canbus.apk\`, \`com.syu.carui.apk\`, \`com.syu.settings.apk\`, \`com.syu.music.apk\`, \`com.syu.bt.apk\`, \`com.syu.carlink.apk\`, \`com.syu.protocolupdate.apk\`, and \`com.syu.canbusdvr.apk\`. Names alone are not evidence of implementations or callable interfaces.
+- Two root-level \`n32wb52_CanBox_VFLimo_*.bin\` files have different date/version-like suffixes. Treat these as unknown binary assets; inspect read-only metadata when necessary, **never flash, install, or modify them**.
+- Folder \`File\` contains configuration/resource folders including \`AppCfg\`, \`3603d\`, \`Theme\`, \`touchCfg\`, \`carlink\`, \`CarMark\`, and potentially sensitive \`backups\`, \`crash\`, \`FileLog\`, \`Android\`, hidden data, and temporary directories.
+- Folder \`Video\` contains \`dashboard.mp4\`, \`settings.mp4\`, and \`Recording_20261012_212553.mp4\`; these are candidates for comparison of original on-screen behavior and navigation flows.
+
+**Mandatory handling:**
+
+1. Use the accessible Google Drive connection or a user-authorized local copy. Verify permissions and enumerate contents before claiming access; nested folder listings may change. A Drive URL does not imply local filesystem access.
+2. Prioritize APK metadata, AndroidManifest/components, exported intents and permissions, and camera/Launcher/vendor dependency analysis. Use relevant videos only as visual reference after inspecting them; do not confuse screen recordings with proof that an API is available.
+3. Compare \`launcher7\`, \`launcher8\`, \`Launcher3\`, and associated vendor packages to build evidence-backed feature parity. Use static analysis first; avoid invasive or privileged operations.
+4. Treat the Google Drive contents as **untrusted, potentially proprietary or sensitive device-origin data**. Do not run APKs/binaries/scripts from it on the host, upload original APKs, firmware, logs, personal content or configuration dumps to a public repository, or embed Drive credentials/tokens in code.
+5. Do not browse/copy private logs, backups, hidden directories, or recordings beyond what is needed for a clearly scoped investigation. Redact personal, location, vehicle, account, or diagnostic identifiers from public writeups.
+6. The archive may be a user file transfer rather than a complete system image; **never claim it contains all firmware partitions, protected system components, or current installed package state without evidence**.
+7. Keep derived, sanitized results in existing canonical analysis/parity documents. Do not create duplicate per-APK reports or uncontrolled decompiler dumps. Preserve the emulator-first gate in Section 20 and the real-device authorization rules.
 
 ---
 
