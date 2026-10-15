@@ -23,6 +23,7 @@
 | Icon theme | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\MacTahoe-icon-theme-main |
 | TN Launcher app icon | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\TN_Launcher.png |
 | Local font resources (user-confirmed download) | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\fonts |
+| Font usage authorization | User confirms licensing for all three supplied font resources; do not require repeat licensing checks before using them in TN Launcher |
 | Wincavn resources — user-confirmed local download of the device archive (preferred source) | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn |
 | User-provided device-file archive (Google Drive) | https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR |
 | Original Launcher APK | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn\APK\VF3-190000007_com.android.launcher8.apk |
@@ -154,7 +155,7 @@ Use Figma Desktop when accessible, otherwise legitimately available Figma MCP/AP
 - Respect landscape driving ergonomics and the priority order; do not clone OS-level behavior beyond Android Launcher privileges.
 - Use the permitted MacTahoe theme where icons actually match applications. Fall back to original installed-app icons, not emoji or unrelated icons.
 - Derive the TN Launcher icon resources from TN_Launcher.png when accessible; preserve original inputs and maintain aspect ratio.
-- Check copyright/licensing and distribution rights before committing external designs/assets. Keep unlicensed assets out of public Git history.
+- Check rights before committing other third-party designs/assets. For the three user-supplied fonts, follow the user's confirmed authorization and Section 22: do not recheck their licenses as a development prerequisite. Keep unrelated unauthorized assets out of public Git history.
 - Update docs/design/design-system.md and docs/design/icon-mapping.md only when useful design decisions or mappings are available.
 
 ## 10. AirDroid, ADB, and real-device testing
@@ -493,29 +494,29 @@ The user reports having downloaded typography assets to:
 - `MRCH-NewYork.ttf` — a font-like file shown in Explorer.
 - `SF-Pro-Display` — a folder shown in Explorer.
 
-Do not assume valid font files, specific weights, Unicode support, genuine font families, license rights or accessible local paths based on the screenshot. If a cloud Codex runner cannot read this Windows location, state that limitation; do not invent an inventory or fetch unrelated files.
+The user **confirms that they have obtained licenses for all three font resources and authorizes their use in the TN Launcher project**. Accept this confirmation without requesting license documents or repeating a font-license review. The screenshot does not verify valid font files, weights, Unicode support, genuine embedded font families or accessible local paths. If a cloud Codex runner cannot read this Windows location, state that limitation; do not invent an inventory or fetch unrelated files.
 
 ### 22.1 Mandatory inspection before use
 
 1. On the Windows host, inspect only the stated font directory with read-only tools, for example PowerShell Get-ChildItem with -LiteralPath and -Recurse -File. Discover actual TTF/OTF/variable/collection formats. Avoid scanning unrelated user folders.
-2. Verify file integrity, embedded family and subfamily names, styles, weights, variation axes, Unicode/glyph coverage and license notices from font metadata. Directory and file names are not authoritative metadata.
+2. Verify technical font integrity, embedded family and subfamily names, styles, weights, variation axes, and Unicode/glyph coverage. Directory and file names are not authoritative metadata. **Skip licensing checks for these three user-authorized resources.**
 3. Review typography tokens from the accessible Figma design; create one lean TN Launcher typography scale for Home, Dock, App Drawer, Search, Clock, Widgets and Settings. Prefer existing docs/design/design-system.md over generating new reports.
-4. For design exploration, SF Pro and SF Pro Display may be considered sans-serif candidates and the MRCH-NewYork.ttf label a potential display-serif candidate. This is NOT a verified family identity or permission to embed. Small driving-critical labels must remain legible and sans-serif where appropriate.
+4. For design exploration, SF Pro and SF Pro Display may be considered sans-serif candidates and the MRCH-NewYork.ttf label a potential display-serif candidate. These names are not verified embedded family identities; inspect the files before use. The user's licensing confirmation permits proceeding with font integration for the TN Launcher project without a separate license gate. Small driving-critical labels must remain legible and sans-serif where appropriate.
 
 ### 22.2 Android 10 (API 29) implementation
 
-- The Android emulator and Wincavn device cannot load a font from the Windows PC path at runtime. For app distribution, use only properly licensed, verified font resources packaged with the APK or suitable system fonts.
-- Check Android API 29 font loading in res/font (or equivalent) with correctly mapped family/weight/style. Test variable font and collection support rather than assuming it; when uncertain, choose a compatible licensed static variant or system fallback.
+- The Android emulator and Wincavn device cannot load a font from the Windows PC path at runtime. Integrate the three user-authorized fonts into the TN Launcher Android app where technically appropriate (including local APK builds) or use system fallbacks when font files cannot be loaded.
+- Check Android API 29 font loading in res/font (or equivalent) with correctly mapped family/weight/style. Test variable font and collection support rather than assuming it; when uncertain, choose a compatible static variant from the supplied files or a system fallback.
 - Provide robust fallback to the Android system sans-serif. Missing fonts must never crash Home, break app launching or hide camera-related information.
 - Validate Vietnamese diacritics, including: Tiếng Việt; Điều hướng; Cài đặt; Âm lượng; Kết nối; Bản đồ; Đường. Also check numbers, long labels, ellipsizing, multiline spacing, uppercase/lowercase, contrast, font scaling and missing glyph boxes.
 - Extend the mandatory Section 20 API 29 emulator test gate to check typography across Home, Dock, App Drawer, Search and Settings, day/night themes and multiple representative landscape densities. A Figma or Windows preview is not emulator verification.
 
-### 22.3 Licensing and asset hygiene
+### 22.3 User-confirmed font authorization and asset hygiene
 
-- Fonts associated with Apple's San Francisco/New York names may be licensed restrictively. Check the actual governing license and the Android application's use/distribution rights before embedding, shipping, converting or redistributing fonts. Possession of a local download alone is insufficient authorization.
-- Do NOT commit or push font binaries, derivative copies or unlicensed previews to the public GitHub repository. Do not include such fonts in publicly shared APKs without verified redistribution permission.
+- **License status for these three fonts: USER_CONFIRMED.** The user expressly states they hold the necessary licenses and requests that Codex skip additional license checks. Do not ask for licenses, block font selection/embedding in local TN Launcher APK builds, or replace the fonts solely because of speculative licensing concerns.
+- Distinguish project usage from repository publication: only add actual font binaries to a public GitHub commit when their inclusion is intentionally requested and the exact files have been reviewed as part of the commit. This is a source-control/data-minimization rule, **not a request to revalidate font licenses**. Ordinary application development and emulator testing may use the local fonts without a new license approval step.
 - Preserve the original Windows font files. Do not move, rename, delete, install system-wide, or modify them without approval.
-- Keep temporary inspection output outside the repository and avoid backup/audit/report sprawl. If licensing cannot be confirmed, use Android system fonts or another clearly licensed alternative and record the limitation.
+- Keep temporary inspection output outside the repository and avoid backup/audit/report sprawl. If a font is corrupt, missing, technically incompatible or lacks required glyphs, use a verified alternative from the supplied set or an Android system fallback and report the **technical** limitation.
 - Report whether the font directory was actually inspected and whether typography was tested on the emulator; never mark either as completed from filenames alone.
 ---
 
