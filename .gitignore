@@ -1,0 +1,15 @@
+.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+.cxx/
+tools/__pycache__/
+.ua/tmp/
+.ua/intermediate/
+.ua/.trash-*/
+.ua/diff-overlay.json
+.ua/meta.json
+.ua/fingerprints.json
+.ua/local-freshness.json

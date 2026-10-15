@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity android:name="vn.tnlauncher.app.FixtureActivity" android:label="Ứng dụng mẫu A" android:exported="true">
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+        </activity>
+        <activity android:name="vn.tnlauncher.app.PrivateFixtureActivity" android:exported="false"/>
+        <activity android:name="vn.tnlauncher.app.FallbackFixtureActivity" android:exported="true"/>
+        <activity android:name="vn.tnlauncher.app.ProtectedFixtureActivity" android:exported="true" android:permission="android.permission.MASTER_CLEAR"/>
+        <activity android:name="vn.tnlauncher.app.ComponentStateFixtureActivity" android:exported="true"/>
+        <receiver android:name="vn.tnlauncher.app.WidgetFixtureProvider" android:label="Tiện ích mẫu cấu hình" android:exported="false">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_fixture_info"/>
+        </receiver>
+        <receiver android:name="vn.tnlauncher.app.SimpleWidgetFixtureProvider" android:label="Tiện ích mẫu trực tiếp" android:exported="false">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_fixture_simple_info"/>
+        </receiver>
+        <activity android:name="vn.tnlauncher.app.WidgetFixtureConfigureActivity" android:exported="true" android:screenOrientation="sensorLandscape">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/></intent-filter>
+        </activity>
+    </application>
+</manifest>

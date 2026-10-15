@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center" android:padding="4dp"
+    android:background="#E9EFF8">
+    <TextView android:id="@+id/widget_fixture_text" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Tiện ích mẫu thật"
+        android:gravity="center" android:textSize="18sp" android:textColor="#142033"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/widget_fixture_update" android:layout_width="0dp"
+            android:layout_height="56dp" android:layout_weight="1" android:text="Cập nhật mẫu"
+            android:textSize="16sp" android:textAllCaps="false"/>
+        <Button android:id="@+id/widget_fixture_open" android:layout_width="0dp"
+            android:layout_height="56dp" android:layout_weight="1" android:text="Mở ứng dụng mẫu từ tiện ích"
+            android:textSize="16sp" android:textAllCaps="false"/>
+    </LinearLayout>
+</LinearLayout>

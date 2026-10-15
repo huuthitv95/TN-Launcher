@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+    <queries>
+        <intent><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent>
+        <package android:name="com.syu.fourcamera2"/>
+        <package android:name="com.syu.music"/>
+        <package android:name="com.syu.bt"/>
+        <package android:name="com.syu.settings"/>
+        <package android:name="com.syu.radio"/>
+        <package android:name="com.syu.video"/>
+        <package android:name="com.syu.eq"/>
+        <package android:name="com.syu.filemanager"/>
+        <package android:name="com.syu.av"/>
+        <package android:name="com.syu.guide"/>
+        <package android:name="com.syu.onekeynavi"/>
+        <intent><action android:name="android.settings.WIFI_SETTINGS"/></intent>
+        <intent><action android:name="android.settings.DATE_SETTINGS"/></intent>
+        <intent><action android:name="android.settings.APPLICATION_DETAILS_SETTINGS"/><data android:scheme="package"/></intent>
+        <intent><action android:name="android.intent.action.DELETE"/><data android:scheme="package"/></intent>
+        <intent><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent>
+        <intent><action android:name="android.search.action.GLOBAL_SEARCH"/></intent>
+        <intent><action android:name="android.service.wallpaper.LIVE_WALLPAPER_CHOOSER"/></intent>
+    </queries>
+    <application android:name=".LauncherApplication" android:allowBackup="false" android:icon="@drawable/tn_brand" android:roundIcon="@drawable/tn_brand" android:label="@string/app_name" android:supportsRtl="true" android:theme="@style/Theme.TNLauncher">
+        <activity android:name=".ui.WidgetsActivity" android:exported="false" android:screenOrientation="sensorLandscape"/>
+        <activity android:name=".ui.HomeActivity" android:exported="true" android:launchMode="singleTask" android:screenOrientation="sensorLandscape" android:windowSoftInputMode="adjustResize">
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.HOME"/><category android:name="android.intent.category.DEFAULT"/></intent-filter>
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+        </activity>
+    </application>
+</manifest>

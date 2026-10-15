@@ -1,0 +1,16 @@
+<resources>
+    <style name="Theme.TNLauncher" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:colorAccent">#0A64D9</item>
+        <item name="android:windowBackground">#182238</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+    <style name="Theme.TNLauncher.Dialog.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="listPreferredItemHeightSmall">56dp</item>
+    </style>
+    <style name="Theme.TNLauncher.Dialog.Dark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="listPreferredItemHeightSmall">56dp</item>
+    </style>
+</resources>

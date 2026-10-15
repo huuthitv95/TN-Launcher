@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TN Launcher</string>
+    <string name="apps">Ứng dụng</string>
+    <string name="settings">Cài đặt</string>
+    <string name="search_hint">Tìm ứng dụng…</string>
+    <string name="home">Màn hình chính</string>
+    <string name="previous">Trang trước</string>
+    <string name="next">Trang sau</string>
+    <string name="retry">Thử lại</string>
+    <string name="empty_apps">Chưa tìm thấy ứng dụng. Hãy thử lại.</string>
+    <string name="empty_search">Không tìm thấy ứng dụng phù hợp.</string>
+    <string name="loading">Đang đọc ứng dụng…</string>
+</resources>
