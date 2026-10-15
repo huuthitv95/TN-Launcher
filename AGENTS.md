@@ -22,6 +22,7 @@
 | Resource root | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher |
 | Icon theme | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\MacTahoe-icon-theme-main |
 | TN Launcher app icon | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\TN_Launcher.png |
+| Local font resources (user-confirmed download) | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\fonts |
 | Wincavn resources — user-confirmed local download of the device archive (preferred source) | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn |
 | User-provided device-file archive (Google Drive) | https://drive.google.com/drive/u/1/folders/17wx4ZXIX6dF-PU960PeBnqIG9f1IVnnR |
 | Original Launcher APK | C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\wincavn\APK\VF3-190000007_com.android.launcher8.apk |
@@ -147,6 +148,7 @@ Android 10 / API 29 is the target runtime. Validate on API 29 whenever an emulat
 Use Figma Desktop when accessible, otherwise legitimately available Figma MCP/API/export assets.
 
 - Inspect actual frames, components, layout/grid, typography, color, spacing, radii, shadows, transitions, and design tokens before claiming fidelity.
+- Inspect the local font assets, permissions and script coverage before selecting typefaces; follow Section 22 for Android integration and API 29 emulator typography checks.
 - Clearly label values invented as pragmatic design defaults when the referenced design cannot be inspected.
 - Build Home, Dock, App Drawer, Search, widgets where supported, Settings, and day/night themes as real Android functionality.
 - Respect landscape driving ergonomics and the priority order; do not clone OS-level behavior beyond Android Launcher privileges.
@@ -479,6 +481,42 @@ Verified **folder-listing metadata only** (no package contents, binary semantics
 6. The archive may be a user file transfer rather than a complete system image; **never claim it contains all firmware partitions, protected system components, or current installed package state without evidence**.
 7. Keep derived, sanitized results in existing canonical analysis/parity documents. Do not create duplicate per-APK reports or uncontrolled decompiler dumps. Preserve the emulator-first gate in Section 20 and the real-device authorization rules.
 
+## 22. User-provided local font assets and typography workflow
+
+The user reports having downloaded typography assets to:
+
+`C:\Users\ZGAMESVN\Downloads\Resource_For_TN_Launcher\fonts`
+
+**Visible labels in the uploaded screenshot (names only, not verified file contents):**
+
+- `San Francisco Pro` — a folder shown in Windows Explorer.
+- `MRCH-NewYork.ttf` — a font-like file shown in Explorer.
+- `SF-Pro-Display` — a folder shown in Explorer.
+
+Do not assume valid font files, specific weights, Unicode support, genuine font families, license rights or accessible local paths based on the screenshot. If a cloud Codex runner cannot read this Windows location, state that limitation; do not invent an inventory or fetch unrelated files.
+
+### 22.1 Mandatory inspection before use
+
+1. On the Windows host, inspect only the stated font directory with read-only tools, for example PowerShell Get-ChildItem with -LiteralPath and -Recurse -File. Discover actual TTF/OTF/variable/collection formats. Avoid scanning unrelated user folders.
+2. Verify file integrity, embedded family and subfamily names, styles, weights, variation axes, Unicode/glyph coverage and license notices from font metadata. Directory and file names are not authoritative metadata.
+3. Review typography tokens from the accessible Figma design; create one lean TN Launcher typography scale for Home, Dock, App Drawer, Search, Clock, Widgets and Settings. Prefer existing docs/design/design-system.md over generating new reports.
+4. For design exploration, SF Pro and SF Pro Display may be considered sans-serif candidates and the MRCH-NewYork.ttf label a potential display-serif candidate. This is NOT a verified family identity or permission to embed. Small driving-critical labels must remain legible and sans-serif where appropriate.
+
+### 22.2 Android 10 (API 29) implementation
+
+- The Android emulator and Wincavn device cannot load a font from the Windows PC path at runtime. For app distribution, use only properly licensed, verified font resources packaged with the APK or suitable system fonts.
+- Check Android API 29 font loading in res/font (or equivalent) with correctly mapped family/weight/style. Test variable font and collection support rather than assuming it; when uncertain, choose a compatible licensed static variant or system fallback.
+- Provide robust fallback to the Android system sans-serif. Missing fonts must never crash Home, break app launching or hide camera-related information.
+- Validate Vietnamese diacritics, including: Tiếng Việt; Điều hướng; Cài đặt; Âm lượng; Kết nối; Bản đồ; Đường. Also check numbers, long labels, ellipsizing, multiline spacing, uppercase/lowercase, contrast, font scaling and missing glyph boxes.
+- Extend the mandatory Section 20 API 29 emulator test gate to check typography across Home, Dock, App Drawer, Search and Settings, day/night themes and multiple representative landscape densities. A Figma or Windows preview is not emulator verification.
+
+### 22.3 Licensing and asset hygiene
+
+- Fonts associated with Apple's San Francisco/New York names may be licensed restrictively. Check the actual governing license and the Android application's use/distribution rights before embedding, shipping, converting or redistributing fonts. Possession of a local download alone is insufficient authorization.
+- Do NOT commit or push font binaries, derivative copies or unlicensed previews to the public GitHub repository. Do not include such fonts in publicly shared APKs without verified redistribution permission.
+- Preserve the original Windows font files. Do not move, rename, delete, install system-wide, or modify them without approval.
+- Keep temporary inspection output outside the repository and avoid backup/audit/report sprawl. If licensing cannot be confirmed, use Android system fonts or another clearly licensed alternative and record the limitation.
+- Report whether the font directory was actually inspected and whether typography was tested on the emulator; never mark either as completed from filenames alone.
 ---
 
 **Operating principle: evidence before conclusions, safety before feature parity, feature parity before polish, full implementable scope plus API 29 emulator verification before any real-device test, parallel core/UI progress, minimal artifacts, and validation before DONE.**
