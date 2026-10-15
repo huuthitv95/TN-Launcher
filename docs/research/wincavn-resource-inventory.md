@@ -65,7 +65,7 @@ Các `versionName` là `1.0`, ngoại trừ Bluetooth `5.0`, carlink `2.26.0920.
 | `apks/com.syu.av.apk` | `6BD035C2C5130C5777E07AC69D0D3768262323DF4CB52C7A3C80A1BF0F11F259` |
 | `apks/com.syu.carlink.apk` | `18199E0AEA5086E2022A62AB756880267690A70659FD66BCB5B3FF75BA6D0294` |
 | `apks/com.syu.guide.apk` | `D2DED2549A8B0948267FA6CF333C113EC8B9BF462510989AB3CEEF3FDD243ADD` |
-| `apks/com.syu.ms.apk` | `0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCAFD2662405E7ED1CD63043C` |
+| `apks/com.syu.ms.apk` | `0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C` |
 
 ## Chữ ký và native
 
@@ -81,3 +81,9 @@ Các `versionName` là `1.0`, ngoại trừ Bluetooth `5.0`, carlink `2.26.0920.
 Mẫu ms khai báo UID `android.uid.system`, EQ/video/AV cũng dùng system; filemanager/guide dùng `android.uid.shell`, carlink dùng `android.uid.systemui`. Đây là UID của gói gốc, không được sao chép sang TN Launcher. Radio để sharedUserId rỗng; carradio/onekeynavi không khai báo sharedUserId. Chi tiết entry point và hợp đồng Binder chưa đủ điều kiện triển khai nằm trong [phân tích Launcher](original-launcher-analysis.md).
 
 Nguồn gốc Wincavn được bảo toàn ngoài Git. Không có APK, mã decompile hoặc log riêng được đưa vào repo; tài liệu chỉ giữ metadata và kết luận đã khử dữ liệu nhạy cảm.
+
+## Đối chiếu contract sau baseline 15dc34f
+
+Đã tính lại SHA-256 từ bytes của cả22 mẫu trong bảng: khớp sau khi sửa lỗi chép hash MS từ63 thành64 ký tự (thêm `F` trong đoạn `…EBCFAFD…`). Đây là sửa metadata tài liệu, không phải APK mới hoặc thay chữ ký. Đã kiểm tra lại caller/receiver bằng JADX và DEX xref cho MS/toolkit, camera, MUSIC/BT/RADIO/EQ/NAV; lớp Java được xuất có mục tiêu trong TEMP, không decompile mọi APK theo tên.
+
+Đã đọc tên ZIP entry của cả34APK để tìm đúng dependency JNI: không có `libsyu_jni.so`, MS có `libsyu_uinput.so` ở bốn ABI; FC không có lib entries dù code load `Native`. Kết luận chỉ áp dụng các APK trong archive, không chứng minh toàn bộ firmware thiếu thư viện. Không đọc private File logs/backups, không tải lại Drive, không dùng IDA cho một binary thay thế không liên quan. Các producer/consumer, native gap và phiên bản tương ứng ở [đặc tả contract](../architecture/wincavn-integration.md).

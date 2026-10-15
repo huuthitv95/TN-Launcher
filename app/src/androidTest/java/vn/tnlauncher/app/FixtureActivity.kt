@@ -16,6 +16,9 @@ class ProtectedFixtureActivity : Activity()
 class FallbackFixtureActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(TextView(this).apply { text = "Màn hình phụ mẫu đang chạy"; textSize = 28f })
+        setContentView(TextView(this).apply {
+            text = "Màn hình phụ mẫu đang chạy"; textSize = 28f
+            contentDescription = intent.action
+        })
     }
 }

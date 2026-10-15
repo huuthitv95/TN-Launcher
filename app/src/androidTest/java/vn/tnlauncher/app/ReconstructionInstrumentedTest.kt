@@ -132,11 +132,13 @@ class ReconstructionInstrumentedTest {
             PrivateFixtureActivity::class.java.name)))
         assertEquals(ComponentName(fixture, FixtureActivity::class.java.name).flattenToString(), normal.inspect().single().component)
         val explicit = AndroidWincavnIntegration(context, listOf(VendorActivityEntry("sample", "Fixture only", fixture,
-            FallbackFixtureActivity::class.java.name, false)))
+            FallbackFixtureActivity::class.java.name, false, Intent.ACTION_MAIN)))
         assertEquals(ComponentName(fixture, FallbackFixtureActivity::class.java.name).flattenToString(), explicit.inspect().single().component)
         try {
             assertEquals(LaunchResult.Opened, explicit.open("sample"))
             assertTrue(device.wait(Until.hasObject(By.text("Màn hình phụ mẫu đang chạy")), 5000))
+            assertTrue("Explicit MAIN must keep its action and bypass the package's different launcher activity",
+                device.hasObject(By.text("Màn hình phụ mẫu đang chạy").desc(Intent.ACTION_MAIN)))
         } finally { device.pressHome() }
         val protected = AndroidWincavnIntegration(context, listOf(VendorActivityEntry("sample", "Fixture only", fixture,
             ProtectedFixtureActivity::class.java.name, false)))

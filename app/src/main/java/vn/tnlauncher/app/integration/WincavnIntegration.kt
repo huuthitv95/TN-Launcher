@@ -113,7 +113,8 @@ class AndroidWincavnIntegration(private val context: Context,
         VendorActivityEntry("guide", "Hướng dẫn Wincavn", "com.syu.guide", "com.syu.guide.GuideActivity"),
         // A different screen in the Bluetooth package: its launcher opens BtAct, not BT audio.
         VendorActivityEntry("bluetooth_audio", "Âm thanh Bluetooth Wincavn", "com.syu.bt", "com.syu.bt.act.ActBtAvStart", false),
-        VendorActivityEntry("navigation", "Yêu cầu điều hướng Wincavn", "com.syu.onekeynavi", "com.syu.onekeynavi.LaunchNavi", false, "com.syu.onekeynavi"),
+        // The public entry waits for toolkit callback28 before opening LaunchNavi. Direct LaunchNavi can drop a cold-start command.
+        VendorActivityEntry("navigation", "Yêu cầu điều hướng Wincavn", "com.syu.onekeynavi", "com.syu.onekeynavi.MainActivity", false, Intent.ACTION_MAIN),
     )
     }
     private fun capability(entry: VendorActivityEntry): Capability {

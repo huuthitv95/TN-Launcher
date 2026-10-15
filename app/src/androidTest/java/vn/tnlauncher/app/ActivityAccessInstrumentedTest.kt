@@ -4,6 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.ResultReceiver
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -12,6 +16,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import vn.tnlauncher.app.integration.ActivityAccess
 import vn.tnlauncher.app.integration.Availability
 import vn.tnlauncher.app.integration.LaunchResult
@@ -46,13 +52,24 @@ class ActivityAccessInstrumentedTest {
         val originalState = pm.getComponentEnabledSetting(component)
 
         fun setState(state: Int) {
+            val applied = CountDownLatch(1)
+            var acknowledgedState = -1
+            var acknowledgedResult = android.app.Activity.RESULT_CANCELED
+            // A fresh receiver identifies this request, even when the desired state already matches.
+            val acknowledgement = object : ResultReceiver(Handler(Looper.getMainLooper())) {
+                override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
+                    acknowledgedState = resultData?.getInt("component_state", -1) ?: -1
+                    acknowledgedResult = resultCode
+                    applied.countDown()
+                }
+            }
             instrumentation.targetContext.startActivity(Intent()
                 .setComponent(ComponentName(instrumentation.context.packageName, ComponentStateFixtureActivity::class.java.name))
-                .putExtra("component_state", state).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            val end = android.os.SystemClock.uptimeMillis() + 5000
-            while (pm.getComponentEnabledSetting(component) != state && android.os.SystemClock.uptimeMillis() < end) {
-                android.os.SystemClock.sleep(25)
-            }
+                .putExtra("component_state", state)
+                .putExtra("component_state_result", acknowledgement).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            assertTrue("The fixture must acknowledge this component-state request: $state", applied.await(5, TimeUnit.SECONDS))
+            assertEquals(android.app.Activity.RESULT_OK, acknowledgedResult)
+            assertEquals("The acknowledged state must belong to this request", state, acknowledgedState)
             assertEquals("The fixture must change its own real PackageManager component state", state, pm.getComponentEnabledSetting(component))
         }
 

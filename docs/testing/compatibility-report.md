@@ -1,6 +1,16 @@
 # Kiểm chứng Android 10
 
-15/10/2026 — **EMULATOR_GATE_PASSED cho phạm vi increment Android trên hai profile/animation1.0 bên dưới**. Build/unit/lint,33instrumentation và9E2E mỗi profile PASS; assertion phân trang được xác nhận riêng lại ở1280 sau sửa harness, rồi E2E1280 cũng chạy lại9/9. **Full original reconstruction INCOMPLETE; Figma NOT_READY.** Không có DEVICE_VERIFIED hoặc AUTOMOTIVE_VERIFIED.
+15/10/2026 — increment navigation trên worktree `main/15dc34f`: **EMULATOR_GATE_PASSED cho phạm vi Android tại animation1.0**; build/unit/lint, instrumentation và E2E cả hai profile đã PASS cho APK mới. **Full original reconstruction INCOMPLETE; Figma deferred.** Không có DEVICE_VERIFIED hoặc AUTOMOTIVE_VERIFIED.
+
+## Lượt contract và navigation hiện tại
+
+Đã đối chiếu sâu toolkit/camera/CAN/media/navigation và hash nguyên bản22APK (sửa một lỗi chép SHA MS trong tài liệu). [Contract specification](../architecture/wincavn-integration.md) ghi bằng chứng, confidence và các lần decompile không thành công; không có APK vendor được chạy/cài, IPC hoặc thao tác xe. Thay đổi production duy nhất là exact navigation MainActivity/ACTION_MAIN thay direct LaunchNavi, theo bootstrap callback28 mới xác định. Nguy cơ mất command cold start là suy luận tĩnh, chưa là lỗi đã tái hiện/sửa trên vendor thật.
+
+Lệnh thực tế: `gradlew.bat tasks --all --console=plain` PASS; `tools/verify-emulator.ps1 -Serial emulator-5580 -Profile 1280` và `-Profile 1920` chạy assembleDebug,25unit,lint0errors/51warnings và33instrumentation. Fixture kiểm tra đúng explicit screen/actionMAIN cùng các ca protected/missing/error cũ. Lượt cuối sau sửa fixture PASS33/33,0skip ở cả1280 (2m36s) và1920 (3m06s). E2E1280 PASS9/9 (177.49s), E2E1920 PASS9/9 (184.90s), cùng APK production SHA22c3c663…ff763c. E2E1280 chạy trước sửa ACK test-only; driver không dùng helper ComponentStateFixtureActivity nên kết quả này vẫn áp dụng cho đúng APK production không đổi. Logs/JSON/screenshots task ở TEMP/tn-launcher-analysis/root-contracts, ngoài repo.
+
+Lượt1920 đầu **FAIL**1/33,0skip tại `disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored`: lần re-enable thứ ba expected1/actual2. Harness chỉ đợi PM bằng giá trị rồi tiếp tục, helper chỉ xử lý onCreate; log có ba activity requests sát nhau, không thấy background-start denial trong đoạn đã kiểm tra. Pending/reused request là giả thuyết phù hợp, chưa chứng minh chính xác cơ chế giao activity của platform. Sửa test-only bằng ResultReceiver/latch mới cho từng request, ACK sau PM write/readback thật, xử lý onNewIntent và giữ finally restore. Không tăng timeout5s, bỏ assertion hoặc fake PackageManager. `assembleDebugAndroidTest` PASS; focused `am instrument -w -r -e class vn.tnlauncher.app.ActivityAccessInstrumentedTest#disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored vn.tnlauncher.app.test/vn.tnlauncher.app.LauncherTestRunner` lặp4/4 PASS trên1920, rồi full1920 và full1280 đều PASS33/33. Không tính lượt FAIL vào cổng; giữ log đầu và kết quả sửa riêng.
+
+Stock graph `prepare-incremental.mjs <repo> 15dc34f…` thực tế thoát1 vì relevant uncommitted changes; không commit/stash để vượt guard. Working-tree refresh có giới hạn dùng stock scanner/import/extractor, rà source/lexical scope, bảo toàn identities/edges, schema chính thức và SHA chuẩn hóa LF. Đây không phải stock incremental PASS. Graph chia sẻ đã ghi321nodes/449edges/68files, đạt schema chính thức,68 LFhash và inventory ổn định, giữ47 source identities trước cùng4 callable mới được ghi đúng scope. Tổng449edges tính cả liên kết Markdown thật từ STATUS đến đặc tả contract mới. Graph được ghi sau freeze tài liệu; kiểm tra marker/contentHash khi tiếp tục. Local committed fingerprints/meta không được giả nâng baseline.
 
 ## Baseline đã đối chiếu
 
@@ -14,6 +24,8 @@ APK MVP trước sửa có17,120,134byte, SHA-256 `46f72880f8901d320fb89c135ff25
 - Regression cuối dùng platform animation scales1.0, font scale1.0. Instrumentation riêng kiểm tra chữ lớn1.5, LIGHT/DARK, glyph Việt và persistence. Đã nhìn trực tiếp màn Widgets rỗng và editor thư mục1.5 ở1920; cancel editor giữ nguyên Preferences bytes.
 
 ## Kết quả và lệnh tái lập
+
+Bảng sau là regression cuối cho APK navigation hiện tại; các lượt FAIL và dữ liệu lịch sử được phân biệt riêng trong báo cáo.
 
 | Kiểm tra | Kết quả |
 | --- | --- |
@@ -44,11 +56,11 @@ Bộ33 gồm Launcher11, Reconstruction8, ActivityAccess4, Widgets4, WidgetStora
 
 - `C:/Users/ZGAMESVN/Downloads/TN-Launcher/app/build/outputs/apk/debug/app-debug.apk`
 - `vn.tnlauncher.app`, variant debug, version0.1.0, versionCode1;17,544,918byte.
-- SHA-256: `eba36322e7a0f0872c47019f38f09ab3cd3d909459480d8e925d5f24f590951c`.
+- SHA-256 sau sửa navigation: `22c3c663b46a68d71b7c896c1d0649bd2896758db23ed04fbb98c3afc8ff763c`. APK trước là `eba36322e7a0f0872c47019f38f09ab3cd3d909459480d8e925d5f24f590951c`; không có bản APK dư được chép vào repo.
 - `apksigner verify --verbose`: PASS, v2, một signer Android Debug. `aapt dump badging/permissions`: đúng label/ID/version/API.
 - Home exported/singleTask, MAIN/HOME/DEFAULT và MAIN/LAUNCHER. WidgetsActivity không exported. Quyền bình thường REQUEST_DELETE_PACKAGES chỉ mở xác nhận gỡ; còn permission signature nội bộ AndroidX. Không sharedUID/DELETE_PACKAGES/BIND_APPWIDGET/camera/storage/overlay/vendor permission, service hoặc boot receiver.
 - Không có test fixtures/probe, APK gốc, mã decompile, thư viện vendor hoặc Apple UI Kit trong APK chính. Native libraries là dependency DataStore. Ba font user-authorized vẫn đóng gói; nguồn gốc giữ nguyên, USER_CONFIRMED theo AGENTS22, không tái kiểm giấy phép.
-- Kiểm thử chạy trên worktree triển khai trước commit, với baseline main/HEAD `4491b15`. Người dùng sau đó yêu cầu “Commit và push lên nhánh main”; source và đúng ba font USER_CONFIRMED đã rà file/byte/hash nằm trong phạm vi này. SHA commit và kết quả push đối chiếu Git. Archive vendor, dữ liệu riêng và APK/build output không được publish; không cài xe hoặc phát hành APK.
+- Regression cũ chạy trên worktree nền `4491b15`, sau đó source được commit/push thành `15dc34f`. Lượt navigation hiện tại là thay đổi local trên `main/15dc34f`; yêu cầu tiếp theo của người dùng cho phép commit/push source lên main, với SHA và kết quả push đối chiếu Git. Archive vendor, dữ liệu riêng và APK/build output không publish; không cài xe hoặc phát hành APK.
 
 ## Lint đã điều tra
 
@@ -57,6 +69,17 @@ Bộ33 gồm Launcher11, Reconstruction8, ActivityAccess4, Widgets4, WidgetStora
 Version notices không tự nâng dependency/toolchain đã khóa. DiscouragedApi là landscape của Home/Widgets theo phạm vi xe; chưa khẳng định phù hợp mọi form factor. Text/i18n còn nợ chuẩn hóa resources; UI hiện tiếng Việt. Overdraw/NotifyDataSetChanged là nơi cần đo thêm, không kết luận là nguyên nhân jank chỉ từ lint. Không thêm suppression hoặc xóa code để làm đẹp số cảnh báo.
 
 ## Hiệu năng quan sát
+
+Số đo APK navigation hiện tại, thu trong E2E; không dùng để suy ra cải thiện render từ thay đổi activity entry:
+
+| Profile | Cold TotalTime3 mẫu; median | Idle CPU một core / PSS KB | PSS sau20 chuyển app | Frame p50/p95; jank |
+| --- | --- | --- | --- | --- |
+|1280×720/160|1218,1370,1008ms;1218ms|0.000% /70,862|87,763|18/69ms;24/40(60.00%)|
+|1920×1080/320|1442,1270,1240ms;1270ms|0.328% /73,726|82,303|26/125ms;28/42(66.67%)|
+
+CPU đo lần lượt3.027s/3.051s. Cả hai E2E không quan sát crash/ANR Launcher trong buffers kể từ marker. Đây là mẫu ngắn và hai snapshot PSS, chưa là soak/leak test hoặc benchmark có kiểm soát. Frame timing1920 vẫn là giới hạn cần đo riêng, không cam kết FPS xe.
+
+Bảng này giữ số đo lịch sử của APK `eba36322…590951c`; không tự gán cho APK navigation mới. Số đo hiện tại được tách ở trên; không suy ra cải thiện render từ thay đổi activity entry.
 
 | Profile | Cold TotalTime3 mẫu; median | Idle CPU một core / PSS KB | PSS sau20 chuyển app | Frame p50/p95; jank |
 | --- | --- | --- | --- | --- |

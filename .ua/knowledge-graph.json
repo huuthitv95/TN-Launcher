@@ -676,7 +676,7 @@
       "type": "file",
       "name": "WincavnIntegration.kt",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Contract capability và typed launch; kiểm tra enabled/exported/suspended/quyền rồi chỉ mở activity gốc khi người dùng yêu cầu, không gọi Binder/service/broadcast.",
+      "summary": "Adapter 12 activity requests có kiểm tra; navigation explicit MainActivity/ACTION_MAIN theo cold-start contract, không gọi toolkit/service/broadcast từ TN.",
       "tags": [
         "android",
         "kotlin",
@@ -684,8 +684,9 @@
         "tested"
       ],
       "complexity": "moderate",
-      "contentHash": "339b330ef4fac98846fbe6dc8e139fed5c200e21a1e17eaf97e44208695111ea",
-      "hashAlgorithm": "sha256-lf-normalized-bytes"
+      "contentHash": "808727ca6eece5cb178634ed1858b111c489279a69f15b297cc4bfc59ba8f14d",
+      "hashAlgorithm": "sha256-lf-normalized-bytes",
+      "languageNotes": "Refresh có giới hạn bằng bundled extractor và rà source; giữ các named-class/method identities đã kiểm tra. Không tuyên bố strict AST/type ownership đầy đủ; grammar Kotlin có recovery ở cú pháp data object, và parser chưa biểu diễn toàn bộ local/anonymous declarations."
     },
     {
       "id": "class:app/src/main/java/vn/tnlauncher/app/data/LauncherAppRepository.kt:LauncherApp",
@@ -988,7 +989,7 @@
       "type": "class",
       "name": "Availability",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Phân loại khả năng từ package vắng đến component/quyền/chưa xác minh/khả dụng.",
+      "summary": "Trạng thái package, component hoặc quyền của entry point, độc lập kết quả trên thiết bị xe.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1005,7 +1006,7 @@
       "type": "class",
       "name": "Capability",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Mô tả một entry point tích hợp, component hiện có và ghi chú giới hạn phần cứng.",
+      "summary": "Mô tả entry point, component và ghi chú giới hạn kiểm chứng trả về cho UI.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1022,7 +1023,7 @@
       "type": "class",
       "name": "ActivityAccess",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Quy tắc thuần kiểm tra enabled/exported/quyền và ánh xạ lỗi startActivity.",
+      "summary": "Quy tắc availability và ánh xạ lỗi Android startActivity sang kết quả có kiểu.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1039,7 +1040,7 @@
       "type": "class",
       "name": "SafeActivityLauncher",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Kiểm tra runtime component/quyền/enabled/suspended trước khi mở bằng intent explicit.",
+      "summary": "Resolve/kiểm tra component trước khi mở activity, giữ action của Intent explicit và xử lý runtime race.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1073,7 +1074,7 @@
       "type": "class",
       "name": "WincavnIntegration",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Contract dò và mở entry point vendor theo ID, thừa kế DeviceCapabilities.",
+      "summary": "Contract dò và mở entry point vendor theo ID, thay thế được trong kiểm thử.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1090,7 +1091,7 @@
       "type": "class",
       "name": "CameraIntegration",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Contract duy nhất mở camera thủ công; không khai báo reverse trigger đã hoạt động.",
+      "summary": "Contract mở camera thủ công; không triển khai reverse trigger hoặc overlay OEM.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1107,7 +1108,7 @@
       "type": "class",
       "name": "VendorActivityEntry",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Định nghĩa entry point vendor có chứng cứ và cờ chọn package launcher hay explicit component đúng màn.",
+      "summary": "Model entry point với cờ ưu tiên launcher package hoặc component/action explicit đã có bằng chứng.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1124,7 +1125,7 @@
       "type": "class",
       "name": "AndroidWincavnIntegration",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Adapter mở launcher activity hoặc explicit component gốc đã có chứng cứ, với trạng thái suy giảm rõ ràng.",
+      "summary": "Adapter 12 manual activity requests; navigation explicit MainActivity/ACTION_MAIN, BT audio explicit subscreen; không toolkit IPC hoặc vendor services.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1133,7 +1134,7 @@
       "complexity": "moderate",
       "lineRange": [
         99,
-        155
+        156
       ]
     },
     {
@@ -1141,7 +1142,7 @@
       "type": "function",
       "name": "ActivityAccess.availability",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Phân loại enabled/exported/quyền thành trạng thái capability có thể hiển thị.",
+      "summary": "Phân loại enabled/exported/quyền thành component-unavailable, permission-required hoặc available.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1158,7 +1159,7 @@
       "type": "function",
       "name": "ActivityAccess.runStart",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Bọc lời gọi startActivity và ánh xạ lỗi Android sang LaunchResult thay vì ném lỗi vào UI.",
+      "summary": "Thực thi lambda start rồi ánh xạ not-found/security/runtime exception thành LaunchResult, không ném lỗi vendor lên UI.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1175,7 +1176,7 @@
       "type": "function",
       "name": "SafeActivityLauncher.resolve",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Resolve intent thành component hoạt động và phân loại availability trước khi mở; không tự cấp quyền.",
+      "summary": "Resolve Intent bằng MATCH_DEFAULT_ONLY, kiểm tra component và trả typed unavailable/permission/unverified khi có lỗi.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1192,7 +1193,7 @@
       "type": "function",
       "name": "SafeActivityLauncher.inspect",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Đọc trạng thái package/component/quyền tại thời điểm gọi; vắng vendor được báo rõ.",
+      "summary": "Kiểm tra Manifest cùng override enabled của package/component, suspended flag, exported và permission hiện tại.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1209,7 +1210,7 @@
       "type": "function",
       "name": "SafeActivityLauncher.launch(component)",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Kiểm tra component và chuyển yêu cầu mở thành kết quả Opened/Missing/Denied/Error.",
+      "summary": "Kiểm tra lại component rồi mở MAIN/LAUNCHER với task flags; trả typed missing/denied/error khi không khả dụng.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1226,7 +1227,7 @@
       "type": "function",
       "name": "SafeActivityLauncher.launch(intent)",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Kiểm tra component và chuyển yêu cầu mở thành kết quả Opened/Missing/Denied/Error.",
+      "summary": "Resolve và kiểm tra Intent, giữ action/data/extras khi explicit component rồi start; xử lý availability và runtime failure.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1243,7 +1244,7 @@
       "type": "function",
       "name": "DeviceCapabilities.inspect",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Khai báo contract inspect cho dependency thay thế được trong kiểm thử; không phải implementation runtime.",
+      "summary": "Khai báo contract đọc capability list, không phải implementation truy cập vendor runtime.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1260,7 +1261,7 @@
       "type": "function",
       "name": "WincavnIntegration.open",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Khai báo contract open cho dependency thay thế được trong kiểm thử; không phải implementation runtime.",
+      "summary": "Khai báo contract yêu cầu mở entry point theo ID, không phải implementation playback/camera.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1277,7 +1278,7 @@
       "type": "function",
       "name": "CameraIntegration.openManual",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Khai báo contract openManual cho dependency thay thế được trong kiểm thử; không phải implementation runtime.",
+      "summary": "Khai báo contract mở camera thủ công, tách khỏi automatic reverse behavior.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1294,7 +1295,7 @@
       "type": "function",
       "name": "AndroidWincavnIntegration.capability",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Kiểm tra candidate theo chiến lược entry đã chứng minh: package launcher rồi explicit fallback, hoặc explicit-only cho màn riêng như BT audio; không suy ra mọi entry dùng cùng một launcher.",
+      "summary": "Kiểm tra package và các component ứng viên theo launcher-first hoặc explicit-only; trả khả dụng và ghi chú hardware chưa kiểm chứng.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1302,8 +1303,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        119,
-        137
+        120,
+        138
       ]
     },
     {
@@ -1311,7 +1312,7 @@
       "type": "function",
       "name": "AndroidWincavnIntegration.inspect",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Đọc trạng thái package/component/quyền tại thời điểm gọi; vắng vendor được báo rõ.",
+      "summary": "Dò từng entry và biến lỗi bất ngờ thành capability unverified, giữ Home khi vendor vắng.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1319,8 +1320,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        138,
-        142
+        139,
+        143
       ]
     },
     {
@@ -1328,7 +1329,7 @@
       "type": "function",
       "name": "AndroidWincavnIntegration.open",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Mở entry point vendor đã kiểm tra theo thao tác người dùng; trả lỗi có kiểu khi vắng hoặc thiếu quyền.",
+      "summary": "Resolve entry theo ID, kiểm tra capability rồi mở launcher hoặc Intent explicit giữ action; navigation dùng MainActivity/ACTION_MAIN để app gốc quản lý cold connection.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1336,8 +1337,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        143,
-        153
+        144,
+        154
       ]
     },
     {
@@ -1345,7 +1346,7 @@
       "type": "function",
       "name": "AndroidWincavnIntegration.openManual",
       "filePath": "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
-      "summary": "Yêu cầu mở camera thủ công qua adapter; không chứng minh tự bật camera lùi.",
+      "summary": "Chuyển thao tác camera thủ công sang entry camera; không phát trigger lùi hoặc điều khiển overlay.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -1353,8 +1354,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        154,
-        154
+        155,
+        155
       ]
     },
     {
@@ -1918,15 +1919,16 @@
       "type": "file",
       "name": "ReconstructionInstrumentedTest.kt",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Kiểm thử phục dựng API29: app-info/uninstall consent, folder CRUD/persistence, hệ thống Wi-Fi/ngày giờ/search/wallpaper và đồng hồ theo phút thật.",
+      "summary": "Kiểm thử phục dựng Android qua API/UI thật, gồm fixture giữ explicit ACTION_MAIN và launcher preference; không xác minh vendor runtime.",
       "tags": [
         "kiểm-thử",
         "android",
         "source"
       ],
       "complexity": "complex",
-      "contentHash": "0bbc4745cbd36ad13e82fec531bf88da956859ab6d719b50cf55ad1b136406d9",
-      "hashAlgorithm": "sha256-lf-normalized-bytes"
+      "contentHash": "c12704f649e0a295d0fa80b7363baa130b399337954a70c19e6efc5fa4c03a79",
+      "hashAlgorithm": "sha256-lf-normalized-bytes",
+      "languageNotes": "Refresh có giới hạn bằng bundled extractor và rà source; giữ các named-class/method identities đã kiểm tra. Không tuyên bố strict AST/type ownership đầy đủ; grammar Kotlin có recovery ở cú pháp data object, và parser chưa biểu diễn toàn bộ local/anonymous declarations."
     },
     {
       "id": "file:app/src/main/java/vn/tnlauncher/app/ui/HomeActivity.kt",
@@ -2169,7 +2171,7 @@
       "type": "class",
       "name": "ReconstructionInstrumentedTest",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Bộ kiểm thử chức năng phục dựng qua Android UI/API thật và persistence; không nâng mức phần cứng vendor.",
+      "summary": "Kiểm thử phục dựng Android trên emulator API29: hệ thống, thư mục, persistence và explicit-action fixture; không xác minh phần cứng vendor.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -2178,7 +2180,7 @@
       "complexity": "complex",
       "lineRange": [
         30,
-        252
+        254
       ]
     },
     {
@@ -2186,7 +2188,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.home",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Khởi chạy Home bằng HOME intent để kiểm thử Views/lifecycle.",
+      "summary": "Mở HomeActivity qua ActivityScenario với MAIN/HOME explicit để kiểm tra launcher Android.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -2203,7 +2205,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.emulatorOnly",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Kiểm tra qemu/API29 trước thay đổi thiết bị trong bộ kiểm thử phục dựng.",
+      "summary": "Kiểm tra qemu và API29 trước chọn TN Home trên emulator, không thao tác thiết bị thật.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2220,7 +2222,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.publicSettingsActionsOpenActualSystemScreensAndReturn",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Mở Wi-Fi và ngày giờ trong Settings hệ thống thật rồi quay Home; kiểm tra ID không biết trả Missing.",
+      "summary": "Mở màn Wi-Fi/ngày giờ Android thật rồi quay Home; kiểm tra ID không biết trả Missing.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2237,7 +2239,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.clockChangesAtTheRealMinuteWhileHomeRemainsVisible",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Chờ TIME_TICK phút thật khi Home foreground, không sửa giờ hệ thống hoặc giả callback.",
+      "summary": "Chờ TIME_TICK phút thật khi Home foreground, không giả callback hoặc sửa đồng hồ hệ thống.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2254,7 +2256,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.optionalSystemRequestsReportAvailabilityAndCancellingWallpaperKeepsHomeSettings",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Kiểm tra hardware search/optional provider và hủy chooser wallpaper không commit đổi nền Home.",
+      "summary": "Kiểm tra search provider, optional wallpaper chooser và hủy chooser không commit đổi wallpaper Home.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2271,7 +2273,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.systemWallpaperIsActuallyShownAndPersistsAcrossRecreation",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Kiểm tra window show-wallpaper, lớp nền và preference qua recreation mà không đổi provider OS.",
+      "summary": "Kiểm tra show-wallpaper flag, lớp nền và persistence qua recreation mà không tự đổi provider OS.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2288,7 +2290,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.vendorFixturePreservesPackageLauncherPreferenceAndExplicitSubscreen",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Fixture kiểm tra launcher-first và explicit-only đúng màn, denied/vắng vendor; không coi fixture là tương thích xe.",
+      "summary": "Fixture xác minh launcher-first, explicit-only đúng màn và giữ ACTION_MAIN bằng contentDescription; kiểm tra protected/missing vendor, không coi fixture là tương thích xe.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2297,7 +2299,7 @@
       "complexity": "simple",
       "lineRange": [
         130,
-        147
+        149
       ]
     },
     {
@@ -2305,7 +2307,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.appDetailsAndSystemUninstallConfirmationCanBeCancelledWithoutDeletingFixture",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Mở app details và hộp thoại uninstall Android, hủy giữ fixture và chặn system app.",
+      "summary": "Mở app details và xác nhận gỡ Android, hủy giữ fixture và chặn system package.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2313,8 +2315,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        148,
-        164
+        150,
+        166
       ]
     },
     {
@@ -2322,7 +2324,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.folderCreateOpenEditRenameAndDeleteRestoreRealHomeApps",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Tạo/chọn thành viên/mở app thật/đổi tên/xóa folder qua UI, xác minh persistence và app trở về Home.",
+      "summary": "Tạo, mở, sửa tên, xóa thư mục qua UI; kiểm tra lưu member và khôi phục app trên đúng trang Home.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2330,8 +2332,8 @@
       ],
       "complexity": "moderate",
       "lineRange": [
-        165,
-        224
+        167,
+        226
       ]
     },
     {
@@ -2339,7 +2341,7 @@
       "type": "function",
       "name": "ReconstructionInstrumentedTest.folderDataStoreSurvivesReopenAndCorruptRowsArePreservedBeforeRecovery",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
-      "summary": "Kiểm tra folder DataStore qua reopen và bảo toàn bytes record hỏng trước phục hồi.",
+      "summary": "Mở lại DataStore giữ thư mục/member thiếu; dữ liệu lỗi được bảo toàn bytes trước phục hồi.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -2347,8 +2349,8 @@
       ],
       "complexity": "moderate",
       "lineRange": [
-        225,
-        251
+        227,
+        253
       ]
     },
     {
@@ -2729,14 +2731,14 @@
       "type": "document",
       "name": "README.md",
       "filePath": "README.md",
-      "summary": "Điểm bắt đầu với phạm vi Launcher, build Windows, emulator API 29, sử dụng, tài nguyên và giới hạn kiểm chứng Wincavn.",
+      "summary": "Điểm bắt đầu với Launcher Android, build/kiểm thử API29, bằng chứng vendor và giới hạn tương thích xe; dẫn đến contract specification.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "8588b8705be6d9450769342fa665a2ec51a9bcc968104bea49fd10ac6e9e36a8",
+      "contentHash": "aa2ac218594fa166d5d5a4ac77d8630041b6489ff8ea39cb918528cce8a302a5",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2776,14 +2778,14 @@
       "type": "document",
       "name": "feature-parity-matrix.md",
       "filePath": "docs/research/feature-parity-matrix.md",
-      "summary": "Nguồn chuẩn per-feature: chứng cứ Launcher gốc, TN implementation, verification độc lập, thiếu hành vi và blocker vendor/phần cứng.",
+      "summary": "Nguồn trạng thái từng tính năng: implementation/verification độc lập, chuỗi contract mới và blocker runtime/phần cứng cụ thể.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "5ada0100d1b6087775d6bea84cc136b92de8a34b237511d121e20bae2cd6f0b0",
+      "contentHash": "85e83d187222a762397b616bbbec0bbaeeb42cdef67b7f2e4d1d7d6a615b18fe",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2791,14 +2793,14 @@
       "type": "document",
       "name": "original-launcher-analysis.md",
       "filePath": "docs/research/original-launcher-analysis.md",
-      "summary": "Kết quả phân tích tĩnh Launcher và hệ sinh thái vendor: component/intent/quyền có chứng cứ, dependency và điều chưa xác minh.",
+      "summary": "Phân tích APK gốc có trace tái lập và liên kết đặc tả IPC/camera/CAN/media; phân biệt đường code với hành vi thiết bị.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "83baeabc0fcbd67f6c98a6db7a6310502a8f3220a4999513e3d4aa726f03a1a3",
+      "contentHash": "6da6bc8ba5a8be3553abc60157b308332d065912945c3b8f2471587d8ad7b10e",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2806,14 +2808,14 @@
       "type": "document",
       "name": "wincavn-resource-inventory.md",
       "filePath": "docs/research/wincavn-resource-inventory.md",
-      "summary": "Kiểm kê mẫu APK cục bộ, metadata/hash/chữ ký và giới hạn archive; không chứa APK, log hoặc dump thiết bị riêng tư.",
+      "summary": "Kiểm kê APK, version/hash/chữ ký/Manifest/native dependency thực, giới hạn artifact và bảo toàn nguồn vendor ngoài repo.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "2c719f6ce856b4b56ad7a9628bf16125eb26ed8c7b28a57cbdce3347a1b003de",
+      "contentHash": "c79aa3ec9d6894c8388da07515d93cf32700c18e72ae050f303a386d06142583",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2868,45 +2870,48 @@
       "type": "file",
       "name": "ActivityAccessInstrumentedTest.kt",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Instrumentation ca runtime race/denied/error và fixture bị disable có phục hồi enabled state trên emulator API 29.",
+      "summary": "Kiểm thử typed launch errors và state của component fixture thật; mỗi yêu cầu dùng ResultReceiver ACK mới thay việc polling trạng thái có thể còn cũ.",
       "tags": [
         "kiểm-thử",
         "android",
         "source"
       ],
       "complexity": "moderate",
-      "contentHash": "675bfd244099c523a2c1724ff76a839a53a2e7e05514eaeae315919945affa87",
-      "hashAlgorithm": "sha256-lf-normalized-bytes"
+      "contentHash": "39bd68c9081cbd461106ba51feb49f08e16bd70b2b90c5538ea7c6376a1f984e",
+      "hashAlgorithm": "sha256-lf-normalized-bytes",
+      "languageNotes": "Hai file ACK được kiểm tra raw grammar không recovery: named-method owner theo ancestry, không chỉ line containment; local/anonymous callback bổ sung được đánh dấu lexical scope."
     },
     {
       "id": "file:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
       "type": "file",
       "name": "ComponentStateFixtureActivity.java",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
-      "summary": "Fixture Java/framework-only đổi trạng thái component của chính test APK, có guard emulator/API29; không cấp quyền shell/root hoặc sửa app gốc.",
+      "summary": "Fixture Java test-only xử lý initial/new Intent, guard emulator/API29, đổi component riêng và ACK đúng request bằng trạng thái PackageManager thực.",
       "tags": [
         "kiểm-thử",
         "android",
         "source"
       ],
       "complexity": "simple",
-      "contentHash": "dba8b6f4b50078d5e84aeed17b658d96da7f702880bca968731cff9918538daa",
-      "hashAlgorithm": "sha256-lf-normalized-bytes"
+      "contentHash": "d3aee3d32231e516843399b7ec34f190ef11ed5919bd102a1594a54c4fa3dbbe",
+      "hashAlgorithm": "sha256-lf-normalized-bytes",
+      "languageNotes": "Hai file ACK được kiểm tra raw grammar không recovery: named-method owner theo ancestry, không chỉ line containment; local/anonymous callback bổ sung được đánh dấu lexical scope."
     },
     {
       "id": "file:app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
       "type": "file",
       "name": "FixtureActivity.kt",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Ứng dụng thật chỉ trong APK kiểm thử cùng component private/protected để kiểm tra quyền và chuyển foreground.",
+      "summary": "Các activity test-only cho launcher/fallback/non-exported/permission cases; màn phụ cung cấp action Intent qua contentDescription.",
       "tags": [
         "kiểm-thử",
         "android",
         "source"
       ],
       "complexity": "simple",
-      "contentHash": "ca5837ad9e6787114c9a6fbcfca2e8eca691d54a787a40308eaffdc7d87e2838",
-      "hashAlgorithm": "sha256-lf-normalized-bytes"
+      "contentHash": "f949c6719e9a07c69ec905554ca41b24e4594cf3ac5b87cf4d7d2b1cf8157bf2",
+      "hashAlgorithm": "sha256-lf-normalized-bytes",
+      "languageNotes": "Refresh có giới hạn bằng bundled extractor và rà source; giữ các named-class/method identities đã kiểm tra. Không tuyên bố strict AST/type ownership đầy đủ; grammar Kotlin có recovery ở cú pháp data object, và parser chưa biểu diễn toàn bộ local/anonymous declarations."
     },
     {
       "id": "file:app/src/androidTest/java/vn/tnlauncher/app/LauncherTestRunner.kt",
@@ -3020,7 +3025,7 @@
       "type": "class",
       "name": "ActivityAccessInstrumentedTest",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Kiểm thử exception/race và component enabled/disabled thật với fixture đổi trạng thái bằng UID của chính nó.",
+      "summary": "Kiểm thử lỗi start và enable/disable fixture trên emulator API29; mỗi request chờ ResultReceiver ACK riêng trước kiểm tra availability và phục hồi.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3028,8 +3033,8 @@
       ],
       "complexity": "moderate",
       "lineRange": [
-        20,
-        71
+        26,
+        88
       ]
     },
     {
@@ -3037,7 +3042,7 @@
       "type": "function",
       "name": "ActivityAccessInstrumentedTest.activityDisappearingDuringStartReturnsMissing",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Kiểm tra activity biến mất tại start trả Missing.",
+      "summary": "Xác minh ActivityNotFoundException trong start được ánh xạ thành Missing.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -3045,8 +3050,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        22,
-        24
+        28,
+        30
       ]
     },
     {
@@ -3054,7 +3059,7 @@
       "type": "function",
       "name": "ActivityAccessInstrumentedTest.permissionChangingDuringStartReturnsDenied",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Kiểm tra quyền thay đổi tại start trả Denied.",
+      "summary": "Xác minh SecurityException trong start được ánh xạ thành Denied.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -3062,8 +3067,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        26,
-        28
+        32,
+        34
       ]
     },
     {
@@ -3071,7 +3076,7 @@
       "type": "function",
       "name": "ActivityAccessInstrumentedTest.runtimeLaunchFailureReturnsSafeError",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Kiểm tra runtime exception được chuyển thành lỗi an toàn không lộ detail test nhạy cảm.",
+      "summary": "Xác minh lỗi runtime trả thông báo an toàn và không làm lộ chi tiết exception.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -3079,8 +3084,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        30,
-        34
+        36,
+        40
       ]
     },
     {
@@ -3088,7 +3093,7 @@
       "type": "function",
       "name": "ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
-      "summary": "Kiểm tra fixture disable/unavailable trên emulator và phục hồi enabled state gốc trong finally.",
+      "summary": "Enable/disable component thật của test APK; dùng local helper với ACK riêng mỗi request trước assert, rồi phục hồi trạng thái ban đầu trong finally.",
       "tags": [
         "kiểm-thử",
         "hành-vi",
@@ -3096,8 +3101,8 @@
       ],
       "complexity": "moderate",
       "lineRange": [
-        36,
-        70
+        42,
+        87
       ]
     },
     {
@@ -3105,16 +3110,16 @@
       "type": "class",
       "name": "ComponentStateFixtureActivity",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
-      "summary": "Activity Java test-only, có guard API29/ranchu, thay đổi duy nhất component FixtureActivity của chính test package.",
+      "summary": "Activity Java chỉ thuộc APK kiểm thử, có guard API29/ranchu/test package; đổi component riêng rồi ACK trạng thái thật cho request tương ứng.",
       "tags": [
         "kotlin",
         "chức-năng",
         "source"
       ],
-      "complexity": "simple",
+      "complexity": "moderate",
       "lineRange": [
-        10,
-        24
+        12,
+        42
       ]
     },
     {
@@ -3122,7 +3127,7 @@
       "type": "function",
       "name": "ComponentStateFixtureActivity.onCreate",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
-      "summary": "Chỉ trên API29/ranchu/test package: đổi trạng thái FixtureActivity bằng quyền own-app rồi finish; không dùng shell grant/root.",
+      "summary": "Đọc initial Intent và chuyển cho applyIntent; mọi thao tác vẫn có guard và scope test-only.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3130,8 +3135,8 @@
       ],
       "complexity": "simple",
       "lineRange": [
-        11,
-        23
+        13,
+        16
       ]
     },
     {
@@ -3139,7 +3144,7 @@
       "type": "class",
       "name": "FixtureActivity",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Ứng dụng fixture có UI thật chỉ trong APK kiểm thử, dùng cho app launch và foreground.",
+      "summary": "Activity launcher mẫu chỉ thuộc APK kiểm thử, hiển thị nhãn cho luồng mở ứng dụng thật.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3156,7 +3161,7 @@
       "type": "class",
       "name": "PrivateFixtureActivity",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Activity không exported chỉ để kiểm tra từ chối mở component ngoài app.",
+      "summary": "Activity test-only không exported để kiểm tra component không gọi được.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3173,7 +3178,7 @@
       "type": "class",
       "name": "ProtectedFixtureActivity",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Activity fixture yêu cầu quyền, dùng kiểm tra capability và typed denial.",
+      "summary": "Activity test-only yêu cầu quyền để kiểm tra adapter trả permission-required.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3190,7 +3195,7 @@
       "type": "class",
       "name": "FallbackFixtureActivity",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Màn fixture thứ hai exported nhưng không có launcher filter, để kiểm tra explicit-only đúng component.",
+      "summary": "Activity phụ test-only không launcher filter; hiển thị action Intent trong contentDescription để xác minh explicit request.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3199,7 +3204,7 @@
       "complexity": "simple",
       "lineRange": [
         16,
-        21
+        24
       ]
     },
     {
@@ -3207,7 +3212,7 @@
       "type": "function",
       "name": "FixtureActivity.onCreate",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Khởi tạo màn hình/runner tương ứng, wiring state và thao tác Android theo source của class.",
+      "summary": "Dựng TextView test-only cho luồng mở ứng dụng fixture thật.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3224,7 +3229,7 @@
       "type": "function",
       "name": "FallbackFixtureActivity.onCreate",
       "filePath": "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
-      "summary": "Khởi tạo màn hình/runner tương ứng, wiring state và thao tác Android theo source của class.",
+      "summary": "Dựng màn phụ và ghi intent.action vào contentDescription, để assertion kiểm tra ACTION_MAIN truyền tới đúng component.",
       "tags": [
         "kotlin",
         "chức-năng",
@@ -3233,7 +3238,7 @@
       "complexity": "simple",
       "lineRange": [
         17,
-        20
+        23
       ]
     },
     {
@@ -4544,14 +4549,14 @@
       "type": "document",
       "name": "architecture.md",
       "filePath": "docs/architecture/architecture.md",
-      "summary": "Mô tả luồng Activity/ViewModel/repository, contract, cache, persistence/recovery và giới hạn adapter vendor để agent đối chiếu source.",
+      "summary": "Kiến trúc thực TN Launcher và ranh giới adapter activity; hướng dẫn kiểm tra graph theo source snapshot và content hash.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "2d63eeb63ae7fd2755f805d96c51bb1b3b33718799633b3a71021b7aa117d95a",
+      "contentHash": "d072a68452096460414034b35d08f7175a7ef12fa4878f49a2c09eb1167ac243",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4589,14 +4594,14 @@
       "type": "document",
       "name": "EXECPLAN.md",
       "filePath": "docs/progress/EXECPLAN.md",
-      "summary": "Kế hoạch sống ghi phạm vi, baseline, bước triển khai, quyết định, kiểm chứng và rủi ro; trạng thái phải đối chiếu source mới nhất.",
+      "summary": "ExecPlan sống cho core và phục dựng Launcher gốc: milestone, bằng chứng, quyết định, kiểm thử và phạm vi chưa thể xác minh.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "28af2327f011d1fa15c12a3210b7eda5f1b812decda52f0a07da8a86d325dfce",
+      "contentHash": "21e58bf0d3b4c5921e97abc9d240cf79be61ac6c624d55922a08f7f90ccd558a",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4604,14 +4609,14 @@
       "type": "document",
       "name": "STATUS.md",
       "filePath": "docs/progress/STATUS.md",
-      "summary": "Điểm tiếp nối phiên: trạng thái core/UI, kiểm chứng đã ghi nhận, giới hạn phần cứng và công việc tiếp theo.",
+      "summary": "Tiến độ hiện tại, kết quả kiểm tra thực, giới hạn Wincavn và bước tiếp theo; không đồng nhất emulator với automotive verification.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "142e54fa03bc8bc9e04d30b2dd57c842654a7d6690d484243d2fb7d01a02c549",
+      "contentHash": "97d6a70e443613ce77c1feb7f3dfd4cf330ec856cc3a31008046af2cf83ca1e5",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4649,14 +4654,14 @@
       "type": "document",
       "name": "compatibility-report.md",
       "filePath": "docs/testing/compatibility-report.md",
-      "summary": "Báo cáo kiểm thử thực tế và artifact/hash, profile API 29, kết quả, số đo cùng giới hạn SwiftShader và phần cứng xe.",
+      "summary": "Kết quả kiểm chứng thực cho APK/Android emulator, phạm vi static contract, regression và các giới hạn render/phần cứng còn lại.",
       "tags": [
         "tài-liệu",
         "chứng-cứ",
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "5126304607dc783404524ad3f69af86ad3a0f02669b922950c102b38135f0e26",
+      "contentHash": "a6f53f3d8def3d652f6baf7bd96837dd48a292b0f97d3f7baa79fd633f619a9d",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5280,6 +5285,107 @@
         24
       ],
       "languageNotes": "Bổ sung symbol hoặc xác minh owner/phạm vi từ source đã đọc do bundled extractor bỏ sót; không phải chứng cứ AST đầy đủ."
+    },
+    {
+      "id": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.onNewIntent",
+      "type": "function",
+      "name": "ComponentStateFixtureActivity.onNewIntent",
+      "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
+      "summary": "Nhận Intent mới khi activity được tái sử dụng, cập nhật Intent hiện tại và xử lý request để không mất ACK.",
+      "tags": [
+        "kiểm-thử",
+        "source",
+        "test-only"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        18,
+        22
+      ],
+      "languageNotes": "Bundled Java extractor và raw grammar thống nhất declaring class của method; chỉ thuộc APK kiểm thử."
+    },
+    {
+      "id": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.applyIntent",
+      "type": "function",
+      "name": "ComponentStateFixtureActivity.applyIntent",
+      "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
+      "summary": "Guard API29/ranchu/test package và state hợp lệ; đổi duy nhất FixtureActivity của test APK, ACK trạng thái PackageManager qua ResultReceiver rồi finish.",
+      "tags": [
+        "kiểm-thử",
+        "source",
+        "test-only"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        24,
+        41
+      ],
+      "languageNotes": "Bundled Java extractor và raw grammar thống nhất declaring class của method; chỉ thuộc APK kiểm thử."
+    },
+    {
+      "id": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+      "type": "function",
+      "name": "ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+      "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
+      "summary": "Hàm local trong bài kiểm thử: tạo receiver mới cho mỗi request, gửi state Intent và đợi ACK/kiểm tra trạng thái trước khi tiếp tục.",
+      "tags": [
+        "kiểm-thử",
+        "source",
+        "test-only"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        54,
+        74
+      ],
+      "languageNotes": "Bổ sung từ source và raw Kotlin grammar: parent trực tiếp là test function, không phải member của test class. Contains thể hiện lexical declaration scope.",
+      "sourceScope": {
+        "kind": "local-function",
+        "lexicalParent": "ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored"
+      }
+    },
+    {
+      "id": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState.acknowledgement.onReceiveResult",
+      "type": "function",
+      "name": "ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState.acknowledgement.onReceiveResult",
+      "filePath": "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
+      "summary": "Callback của anonymous ResultReceiver trong local setState: nhận kết quả/state của đúng request rồi đếm latch để bài kiểm thử tiếp tục.",
+      "tags": [
+        "kiểm-thử",
+        "source",
+        "test-only"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        60,
+        64
+      ],
+      "languageNotes": "Bổ sung từ source và raw Kotlin grammar: method của object literal ResultReceiver, lồng trong local setState. Không gán declaring type là ActivityAccessInstrumentedTest; contains chỉ biểu diễn lexical scope.",
+      "sourceScope": {
+        "kind": "anonymous-object-method",
+        "receiverType": "android.os.ResultReceiver",
+        "lexicalParent": "ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+        "anonymousObjectLineRange": [
+          59,
+          65
+        ]
+      }
+    },
+    {
+      "id": "document:docs/architecture/wincavn-integration.md",
+      "type": "document",
+      "name": "wincavn-integration.md",
+      "filePath": "docs/architecture/wincavn-integration.md",
+      "summary": "Đặc tả bằng chứng tĩnh liên APK cho toolkit/Binder, reverse/PiP, CAN/ACC, media/radio/DSP và navigation; không phải SDK được phép gọi hoặc runtime automotive proof.",
+      "tags": [
+        "tài-liệu",
+        "chứng-cứ",
+        "vendor-contract",
+        "static-verified"
+      ],
+      "complexity": "complex",
+      "contentHash": "a7d9982845e16a02e88db4d6535048c8242ca7a6facd09ee8b89d048c05d5c54",
+      "hashAlgorithm": "sha256-lf-normalized-bytes"
     }
   ],
   "edges": [
@@ -8426,6 +8532,150 @@
       "type": "documents",
       "direction": "forward",
       "weight": 0.5
+    },
+    {
+      "source": "class:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.onNewIntent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0,
+      "description": "Method khai báo trực tiếp trong Java fixture class đã kiểm tra raw grammar scope."
+    },
+    {
+      "source": "class:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.applyIntent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0,
+      "description": "Method khai báo trực tiếp trong Java fixture class đã kiểm tra raw grammar scope."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0,
+      "description": "Hàm local khai báo trong bài kiểm thử này; contains là lexical scope, không phải class membership."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState.acknowledgement.onReceiveResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0,
+      "description": "Callback anonymous ResultReceiver khai báo trong local setState; contains là lexical scope, không gán declaring type."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Bài kiểm thử gửi enable/disable/restore qua local helper setState và chờ ACK."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.onCreate",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.applyIntent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Initial Intent và request mới khi activity tái sử dụng cùng đi qua applyIntent có guard."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.onNewIntent",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.applyIntent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8,
+      "description": "Initial Intent và request mới khi activity tái sử dụng cùng đi qua applyIntent có guard."
+    },
+    {
+      "source": "function:app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java:ComponentStateFixtureActivity.applyIntent",
+      "target": "function:app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt:ActivityAccessInstrumentedTest.disabledFixtureIsUnavailableAndOriginalComponentStateIsRestored.setState.acknowledgement.onReceiveResult",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Contract ACK test-only qua ResultReceiver trong Intent extra component_state_result; quan hệ IPC bất đồng bộ, không phải lời gọi method trực tiếp."
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/architecture/architecture.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/architecture/wincavn-integration.md",
+      "target": "document:docs/research/feature-parity-matrix.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/architecture/wincavn-integration.md",
+      "target": "document:docs/research/wincavn-resource-inventory.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/STATUS.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/research/feature-parity-matrix.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/research/original-launcher-analysis.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/research/wincavn-resource-inventory.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/testing/compatibility-report.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp trong tài liệu hiện tại; không phải dependency runtime."
+    },
+    {
+      "source": "document:docs/architecture/wincavn-integration.md",
+      "target": "file:app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Đối chiếu đặc tả vendor với ranh giới TN chỉ gửi activity intent, gồm navigation MainActivity/ACTION_MAIN."
     }
   ],
   "layers": [
@@ -8539,7 +8789,8 @@
         "document:docs/release/installation-guide.md",
         "document:docs/release/rollback-guide.md",
         "document:docs/testing/compatibility-report.md",
-        "document:docs/testing/device-test-checklist.md"
+        "document:docs/testing/device-test-checklist.md",
+        "document:docs/architecture/wincavn-integration.md"
       ]
     },
     {
@@ -8567,10 +8818,11 @@
     {
       "order": 2,
       "title": "Bằng chứng chức năng gốc",
-      "description": "Đọc parity và phân tích APK trước adapter. Component tồn tại không tự chứng minh callable hoặc camera lùi hoạt động.",
+      "description": "Đọc parity, phân tích APK và contract IPC/camera/CAN/media đã đối chiếu; graph và confidence tĩnh không chứng minh ordinary-app access hoặc camera xe.",
       "nodeIds": [
         "document:docs/research/feature-parity-matrix.md",
-        "document:docs/research/original-launcher-analysis.md"
+        "document:docs/research/original-launcher-analysis.md",
+        "document:docs/architecture/wincavn-integration.md"
       ]
     },
     {
@@ -8675,8 +8927,41 @@
       "Espresso"
     ],
     "description": "Launcher Android 10 native Kotlin/Views với Home, Dock, Drawer, thư mục, AppWidgetHost riêng và cấu hình bền vững; adapter Android/Wincavn kiểm tra khả năng trước khi mở ứng dụng gốc, phục dựng parity chưa hoàn tất và chưa xác minh phần cứng xe.",
-    "analyzedAt": "2026-10-15T04:56:10.732073+00:00",
-    "gitCommitHash": "4491b156a51deeabdb617be92ff33db418652130",
-    "sourceSnapshotNote": "gitCommitHash là commit nền phân tích; contentHash chuẩn hóa LF xác định chính xác source snapshot được commit."
+    "analyzedAt": "2026-10-15T08:16:18.614776+00:00",
+    "gitCommitHash": "15dc34fbc7621bd826497d352bf288e7eb491261",
+    "sourceSnapshotNote": "Commit nền 15dc34f; graph phản ánh working tree chưa commit theo contentHash LF-normalized. Stock incremental wrapper đã chạy nhưng bị relevant dirty paths chặn; không giả commit hoặc fingerprint/meta sạch.",
+    "manualWorkingTreeRefresh": {
+      "mode": "bounded-source-reviewed-working-tree-refresh",
+      "baseCommit": "15dc34fbc7621bd826497d352bf288e7eb491261",
+      "workingTreeDirty": true,
+      "stockIncrementalStatus": "BLOCKED_DIRTY_WORKTREE",
+      "reason": "Coordinator đã chạy stock prepare-incremental một lần và nhận exit1 do relevant dirty paths. Helper yêu cầu source bằng HEAD; chưa có quyền commit hoặc stash.",
+      "reviewedPaths": [
+        "README.md",
+        "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
+        "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java",
+        "app/src/androidTest/java/vn/tnlauncher/app/FixtureActivity.kt",
+        "app/src/androidTest/java/vn/tnlauncher/app/ReconstructionInstrumentedTest.kt",
+        "app/src/main/java/vn/tnlauncher/app/integration/WincavnIntegration.kt",
+        "docs/architecture/architecture.md",
+        "docs/architecture/wincavn-integration.md",
+        "docs/progress/EXECPLAN.md",
+        "docs/progress/STATUS.md",
+        "docs/research/feature-parity-matrix.md",
+        "docs/research/original-launcher-analysis.md",
+        "docs/research/wincavn-resource-inventory.md",
+        "docs/testing/compatibility-report.md"
+      ],
+      "preservedSourceSymbols": 47,
+      "currentSourceSymbols": 51,
+      "newSourceSymbolNodes": 4,
+      "sourceGraphSha256": "6bb79f2879d21cb8694c95bbd9eded7f8698fb5dddf06ccd3fead7fcf673a14e",
+      "rawScopeValidationPaths": [
+        "app/src/androidTest/java/vn/tnlauncher/app/ActivityAccessInstrumentedTest.kt",
+        "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java"
+      ],
+      "parserLimitations": "Raw grammar scope không recovery chỉ được kiểm tra cho hai file ACK; recovery ở cú pháp Kotlin data object không cho phép tuyên bố strict ownership toàn WincavnIntegration. Các identity còn lại được extract lại và rà source; không tự xác nhận xóa symbol.",
+      "validation": "Bundled scan/extract/import APIs, rà source, pure compareFileSymbols cho identity/owner, official schema, LF hash và inventory; không phải stock incremental workflow PASS."
+    }
   }
 }
