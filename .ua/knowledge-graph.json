@@ -2785,7 +2785,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "85e83d187222a762397b616bbbec0bbaeeb42cdef67b7f2e4d1d7d6a615b18fe",
+      "contentHash": "f5f444229104b447299d86648f1b83034aad64797de520d9ba74d7a2595176eb",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2800,7 +2800,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "6da6bc8ba5a8be3553abc60157b308332d065912945c3b8f2471587d8ad7b10e",
+      "contentHash": "7efde15744a03d4477c3f23c7f72cf0e18ec3549526b594538f553734bd23596",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2815,7 +2815,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "c79aa3ec9d6894c8388da07515d93cf32700c18e72ae050f303a386d06142583",
+      "contentHash": "f3cc9c01d49cafc05d89309ff8a35ba3ff2487370c272666cf4a432268fd667e",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4601,7 +4601,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "21e58bf0d3b4c5921e97abc9d240cf79be61ac6c624d55922a08f7f90ccd558a",
+      "contentHash": "b5470be6bcdc74c649aa60331344089d38cf3ef8bbd84ee1bcac41096335c9a0",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4616,7 +4616,7 @@
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "97d6a70e443613ce77c1feb7f3dfd4cf330ec856cc3a31008046af2cf83ca1e5",
+      "contentHash": "b0a4a3ceb00df63811c1639d19aa09002230b87a023793ada84a9254d5448c79",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5384,7 +5384,7 @@
         "static-verified"
       ],
       "complexity": "complex",
-      "contentHash": "a7d9982845e16a02e88db4d6535048c8242ca7a6facd09ee8b89d048c05d5c54",
+      "contentHash": "c4cf16329c1cde40183b047c0d5e090830cadee5ecca5a906542cea2e1b678d2",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     }
   ],
@@ -8961,7 +8961,26 @@
         "app/src/androidTest/java/vn/tnlauncher/app/ComponentStateFixtureActivity.java"
       ],
       "parserLimitations": "Raw grammar scope không recovery chỉ được kiểm tra cho hai file ACK; recovery ở cú pháp Kotlin data object không cho phép tuyên bố strict ownership toàn WincavnIntegration. Các identity còn lại được extract lại và rà source; không tự xác nhận xóa symbol.",
-      "validation": "Bundled scan/extract/import APIs, rà source, pure compareFileSymbols cho identity/owner, official schema, LF hash và inventory; không phải stock incremental workflow PASS."
+      "validation": "Bundled scan/extract/import APIs, rà source, pure compareFileSymbols cho identity/owner, official schema, LF hash và inventory; không phải stock incremental workflow PASS.",
+      "latestDocOnlyRefresh": {
+        "mode": "bounded-doc-only-working-tree-refresh",
+        "baseCommit": "6a02097a0d0186a2e2ace70e4ba8c1287176af87",
+        "workingTreeDirty": true,
+        "stockIncrementalStatus": "BLOCKED_DIRTY_WORKTREE",
+        "reason": "Stock prepare-incremental exit1 vì tài liệu đang sửa chưa commit. Không commit/stash, không advance private meta/fingerprints; đây là refresh thủ công có giới hạn.",
+        "refreshedAt": "2026-10-16T04:21:40.938694+00:00",
+        "reviewedPaths": [
+          "docs/architecture/wincavn-integration.md",
+          "docs/progress/EXECPLAN.md",
+          "docs/progress/STATUS.md",
+          "docs/research/feature-parity-matrix.md",
+          "docs/research/original-launcher-analysis.md",
+          "docs/research/wincavn-resource-inventory.md"
+        ],
+        "fileCount": 68,
+        "sourceGraphSha256": "dafb0b7eab1b480f95304ed315f34077ed113b718fb6d198a1090c6485a2cae6",
+        "validation": "Bundled file scan; source hashes và toàn bộ descriptor/ID/edge/layer/tour giữ nguyên; official schema và 68 LF-normalized contentHash. Không AST reanalysis hoặc stock incremental PASS."
+      }
     }
   }
 }
