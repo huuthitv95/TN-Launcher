@@ -518,6 +518,15 @@ The user **confirms that they have obtained licenses for all three font resource
 - Preserve the original Windows font files. Do not move, rename, delete, install system-wide, or modify them without approval.
 - Keep temporary inspection output outside the repository and avoid backup/audit/report sprawl. If a font is corrupt, missing, technically incompatible or lacks required glyphs, use a verified alternative from the supplied set or an Android system fallback and report the **technical** limitation.
 - Report whether the font directory was actually inspected and whether typography was tested on the emulator; never mark either as completed from filenames alone.
+## 23. TN Launcher Multi-Agent Coordination
+
+- Before each task, read [Agent Registry](docs/progress/AGENT-REGISTRY.md), STATUS, the relevant Agent handoff and parity evidence. Verify source revisions and current Git state; do not treat historical reports or proposed work as a current assignment.
+- Respect task ownership: Claude AI 1 coordinates; Claude AI 2 reviews OEM evidence independently; Codex owns Android implementation/research; GitLab QA is Claude Opus 4.8 per the Owner's registry; default Notion AI owns UI/UX documentation. Temporary Codex sub-agents do not become additional project roles.
+- Notion UI design may proceed independently of OEM research and coding. Android UI integration requires the actual design handoff, Owner approval of its revision, and a separately assigned development scope. Preserve P0–P4 and all emulator/device gates.
+- Record the registry's handoff fields and source-based status after meaningful delivery; use the existing canonical documents, avoid duplicate tasks/reports, and keep static confidence, implementation and verification separate. Do not silently message other Agents or synchronize external services.
+- Project Owner retains final authority over design, increments, GitHub/GitLab publication/merge, release and device tests under Sections 13, 16 and 20. This documentation task authorizes local registry updates only; wait for explicit approval before a new development increment or commit/push.
+- Respond to the Project Owner in Vietnamese even when the supplied prompt is in English.
+
 ---
 
 **Operating principle: evidence before conclusions, safety before feature parity, feature parity before polish, full implementable scope plus API 29 emulator verification before any real-device test, parallel core/UI progress, minimal artifacts, and validation before DONE.**

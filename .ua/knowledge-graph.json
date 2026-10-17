@@ -2723,7 +2723,7 @@
         "kiến-trúc"
       ],
       "complexity": "complex",
-      "contentHash": "c8f6019812882b4070f115dc66cd3057c0cb08c3f97692a667a8e77f08191125",
+      "contentHash": "694a819dc91b05417fc98a2d190a5af71c78de977e3515200774eba4b6fab311",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4601,7 +4601,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "b5470be6bcdc74c649aa60331344089d38cf3ef8bbd84ee1bcac41096335c9a0",
+      "contentHash": "a93c864dabd3e6337ad3e6e2adfad921d4e5421bf8c4302d5a7cbe5aa1b1e1ea",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4616,7 +4616,7 @@
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "b0a4a3ceb00df63811c1639d19aa09002230b87a023793ada84a9254d5448c79",
+      "contentHash": "4178b0042c93165168a9b388cfef0dce9b85dbe4a2bb12e57524d9d870706ab0",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5385,6 +5385,21 @@
       ],
       "complexity": "complex",
       "contentHash": "c4cf16329c1cde40183b047c0d5e090830cadee5ecca5a906542cea2e1b678d2",
+      "hashAlgorithm": "sha256-lf-normalized-bytes"
+    },
+    {
+      "id": "document:docs/progress/AGENT-REGISTRY.md",
+      "type": "document",
+      "name": "AGENT-REGISTRY.md",
+      "filePath": "docs/progress/AGENT-REGISTRY.md",
+      "summary": "Sổ vai trò và phối hợp TN Launcher: phân biệt trạng thái hiện tại, báo cáo lịch sử, công việc đề xuất, handoff và quyền phê duyệt của Project Owner.",
+      "tags": [
+        "tài-liệu",
+        "điều-phối",
+        "bàn-giao"
+      ],
+      "complexity": "moderate",
+      "contentHash": "89403a3375ec09a459a481096436d3d9cc0be6a12cd9374cfa9adb8a35382f69",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     }
   ],
@@ -8676,6 +8691,94 @@
       "direction": "forward",
       "weight": 0.5,
       "description": "Đối chiếu đặc tả vendor với ranh giới TN chỉ gửi activity intent, gồm navigation MainActivity/ACTION_MAIN."
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "document:docs/progress/AGENT-REGISTRY.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:AGENTS.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/architecture/architecture.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/architecture/wincavn-integration.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/design/design-system.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/design/icon-mapping.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/progress/EXECPLAN.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/progress/STATUS.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/research/feature-parity-matrix.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/AGENT-REGISTRY.md",
+      "target": "document:docs/testing/compatibility-report.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
+    },
+    {
+      "source": "document:docs/progress/STATUS.md",
+      "target": "document:docs/progress/AGENT-REGISTRY.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Liên kết Markdown trực tiếp của Agent Registry; chỉ điều hướng tài liệu, không biểu diễn AI actor, task hoặc dependency runtime."
     }
   ],
   "layers": [
@@ -8790,7 +8893,8 @@
         "document:docs/release/rollback-guide.md",
         "document:docs/testing/compatibility-report.md",
         "document:docs/testing/device-test-checklist.md",
-        "document:docs/architecture/wincavn-integration.md"
+        "document:docs/architecture/wincavn-integration.md",
+        "document:docs/progress/AGENT-REGISTRY.md"
       ]
     },
     {
@@ -8980,6 +9084,39 @@
         "fileCount": 68,
         "sourceGraphSha256": "dafb0b7eab1b480f95304ed315f34077ed113b718fb6d198a1090c6485a2cae6",
         "validation": "Bundled file scan; source hashes và toàn bộ descriptor/ID/edge/layer/tour giữ nguyên; official schema và 68 LF-normalized contentHash. Không AST reanalysis hoặc stock incremental PASS."
+      },
+      "latestAgentRegistryDocRefresh": {
+        "mode": "bounded-document-registry-working-tree-refresh",
+        "baseCommit": "42564cbe10bcfaadfa1b8dce505acde2ed549b33",
+        "workingTreeDirty": true,
+        "stockIncrementalStatus": "BLOCKED_DIRTY_WORKTREE",
+        "reason": "Stock prepare-incremental thực tế exit1 vì tài liệu chưa commit. Refresh thủ công có giới hạn; không commit/stash, không giả advance meta/fingerprints hoặc nâng analysis-base lịch sử.",
+        "refreshedAt": "2026-10-17T05:52:08.470449+00:00",
+        "reviewedPaths": [
+          "AGENTS.md",
+          "docs/progress/AGENT-REGISTRY.md",
+          "docs/progress/EXECPLAN.md",
+          "docs/progress/STATUS.md"
+        ],
+        "newDocumentPath": "docs/progress/AGENT-REGISTRY.md",
+        "fileCount": 69,
+        "sourceGraphSha256": "93ee8a38afd4be1ff56b6597abae94ce50e1ee1131656f42864516dcc635763d",
+        "validation": "Bundled scanner, official schema, 69 LF-normalized content hashes; giữ nguyên toàn bộ source descriptors/IDs và 449 cạnh cũ. Chỉ thêm một document node, layer membership và các cạnh Markdown liên quan registry; không AI actor/task nodes, không AST reanalysis."
+      },
+      "latestPublicationDocRefresh": {
+        "mode": "bounded-publication-document-working-tree-refresh",
+        "baseCommit": "42564cbe10bcfaadfa1b8dce505acde2ed549b33",
+        "workingTreeDirty": true,
+        "refreshedAt": "2026-10-17T16:04:17.224680+00:00",
+        "reviewedPaths": [
+          "docs/progress/AGENT-REGISTRY.md",
+          "docs/progress/EXECPLAN.md",
+          "docs/progress/STATUS.md"
+        ],
+        "fileCount": 69,
+        "sourceGraphSha256": "f28be59528eef704d1a88ca9b8c1ded7d97d7d50960a44fb307a548889420372",
+        "reason": "Cập nhật đúng ba hash tài liệu sau khi Owner cho phép đồng bộ GitHub; giữ provenance của lượt registry, không chạy lại phân tích source hoặc giả nâng private metadata.",
+        "validation": "Official schema và 69 LF-normalized contentHash; giữ nguyên toàn bộ node IDs/descriptors ngoài ba doc hashes, edges/layers/tour và các marker lịch sử. Không phải stock incremental PASS."
       }
     }
   }
