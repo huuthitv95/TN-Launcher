@@ -1,6 +1,6 @@
 # Checklist kiểm thử Wincavn sau cổng emulator
 
-Ngày lập: 15/10/2026. **Tất cả ca HW: NOT_RUN.** PRE-01 đã đạt trên emulator; các điều kiện/ca trên thiết bị thật còn lại chưa thực hiện. Chưa có DEVICE_VERIFIED hoặc AUTOMOTIVE_VERIFIED. Tài liệu là bộ ca cho một phiên được cho phép riêng; không phải đề nghị cài hoặc đổi Home ngay lúc này.
+Ngày lập: 15/10/2026; cập nhật18/10/2026. **Các ca HW so sánh TN vẫn NOT_RUN.** Owner cho phép quan sát/chẩn đoán OEM khi xe đứng yên có giám sát; sau lỗi ADB ban đầu, yêu cầu thực hiện guide cho phép bật lại ADB tạm và restart adbd. ADB/scrcpy đã kết nối; runtime fingerprint và Home/ảnh camera OEM đã được quan sát. Các lần chạm nút nổi ban đầu chưa quan sát transition. Owner tiếp tục cho phép riêng ca tự chuyển camera khi lùi trên OEM; đã quan sát một chu kỳ Home L8→camera phía sau toàn màn hình→Home, thao tác số hoàn toàn do người tại xe. Xem [compatibility report](compatibility-report.md#baseline-oem-tự-chuyển-khi-lùi--18-oem-r01). Chưa có TN DEVICE_VERIFIED hoặc AUTOMOTIVE_VERIFIED; không cài TN hoặc đổi Home.
 
 **Đường rollback trên Wincavn chưa được xác minh, đang chặn mọi bước cài/chọn TN Launcher làm Home.** Xem [rollback guide](../release/rollback-guide.md). Cổng emulator là điều kiện bổ sung, không tự mở cổng thiết bị.
 
@@ -9,13 +9,17 @@ Ngày lập: 15/10/2026. **Tất cả ca HW: NOT_RUN.** PRE-01 đã đạt trên
 | ID | Điều kiện cần có bằng chứng trước khi tiếp tục | Trạng thái |
 | --- | --- | --- |
 | PRE-01 | `EMULATOR_GATE_PASSED` được ghi trong compatibility report cho đúng APK, phiên bản và SHA-256; không còn lỗi chặn chức năng MVP; giới hạn frame/night mode được ghi rõ | PASS — chỉ emulator |
-| PRE-02 | Người dùng cho phép rõ từng hành động: chẩn đoán, cài APK, chọn Home và các ca camera/phần cứng. Chỉ thực hiện những mục đã được cho phép | NOT_RUN |
-| PRE-03 | Có người trực tiếp giám sát tại xe; xe đứng yên trong điều kiện thử được người tại xe xác nhận an toàn. Không điều khiển xe từ xa | NOT_RUN |
+| PRE-02 | Người dùng cho phép rõ từng hành động: chẩn đoán, cài APK, chọn Home và các ca camera/phần cứng. Chỉ thực hiện những mục đã được cho phép | OWNER_AUTHORIZED18/10: quan sát/chẩn đoán, hai lệnh ADB trong guide, chạm nút nổi và yêu cầu tiếp theo cho ca lùi OEM có giám sát; cài TN/chọn Home/thử từ TN NOT_AUTHORIZED |
+| PRE-03 | Có người trực tiếp giám sát tại xe; xe đứng yên trong điều kiện thử được người tại xe xác nhận an toàn. Không điều khiển xe từ xa | OWNER_CONFIRMED18/10 và xác nhận lại trước ca lùi/khu vực trống; điều kiện thực địa dựa vào người tại xe, không chứng nhận an toàn từ ảnh |
 | PRE-04 | Xác minh cách vào Settings/chọn Home và mở Launcher gốc qua lối độc lập với TN Launcher; ghi đường điều hướng, component thực tế và cách phục hồi khi TN Launcher không mở được | NOT_RUN |
-| PRE-05 | Xác minh AirDroid thực sự có thể xem/điều khiển/truyền file ở mức nào. Chỉ dùng ADB thiết bị thật nếu có kết nối được ủy quyền riêng; không suy ra ADB/root từ AirDroid | NOT_RUN |
-| PRE-06 | Ghi baseline Launcher mặc định, camera/cảnh báo hiện có, Android/firmware, độ phân giải/mật độ thực nếu đọc được; giữ nguyên app gốc và dữ liệu/cấu hình | NOT_RUN |
+| PRE-05 | Xác minh AirDroid thực sự có thể xem/điều khiển/truyền file ở mức nào. Chỉ dùng ADB thiết bị thật nếu có kết nối được ủy quyền riêng; không suy ra ADB/root từ AirDroid | AirDroid xem/chạm/nhập Terminal và ADB riêng/scrcpy OBSERVED18/10; file transfer không thử, không suy quyền TN từ shell |
+| PRE-06 | Ghi baseline Launcher mặc định, camera/cảnh báo hiện có, Android/firmware, độ phân giải/mật độ thực nếu đọc được; giữ nguyên app gốc và dữ liệu/cấu hình | PARTIAL18/10: L8 Home, API29/1280×800/160dpi,7 APK khớp SHA; một chu kỳ tự chuyển camera lùi/toàn màn hình và về Home OEM đã quan sát. Active CAN/radar/precedence từ TN hoặc app khác/rollback chưa rõ |
 
 PRE-04 phải hoàn tất trước khi cài/chọn Home. Đổi Home là hành động riêng cần cho phép, dù việc cài APK đã được cho phép. Không disable, gỡ, ghi đè Launcher/camera/service gốc hoặc cấp quyền nâng cao để vượt một lỗi tích hợp.
+
+## Baseline OEM đã thực hiện
+
+18-OEM-R01: PASS cho ba mốc riêng trước R/tự chuyển khi R/tự về Home sau khi Owner đưa xe về trạng thái đỗ; chi tiết và giới hạn trong compatibility report liên kết ở trên. Không bấm camera/Home/Back hoặc gửi input trong ca này. Một chu kỳ quan sát không đo độ trễ, không kiểm chứng radar/cảnh báo hoặc TN; không thay thế các ca HW dưới đây.
 
 ## Ca phần cứng và tiêu chí đạt
 

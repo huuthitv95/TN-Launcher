@@ -2,6 +2,22 @@
 
 Kiểm tra tĩnh ngày 15–16/10/2026 trên bản tài nguyên Wincavn cục bộ do người dùng cung cấp. Không cài, chạy, sửa hay tải lên các APK gốc. Bản sao này không chứng minh trạng thái ứng dụng đang cài hoặc toàn bộ firmware trên xe.
 
+## Đối chiếu bản đang cài — 18/10/2026
+
+Phiên chẩn đoán được Owner cho phép: pm path, dumpsys package có mục tiêu và sha256sum đọc APK active tại chỗ, không copy APK từ xe hoặc sửa package. Bảy SHA khớp nguyên bản dưới đây; điều này chứng minh đúng bytes/version mẫu, không là proof chức năng hoặc toàn bộ firmware.
+
+| Package active | versionCode | SHA-256 | User0 enabled |
+| --- | ---: | --- | ---: |
+| com.android.launcher8 | 26031215 | F6BB96726180B12284AF05261F5F3AFB464FC9C37A74A954D908C700A198BE84 | 0 |
+| com.syu.ms | 2126091217 | 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | 0 |
+| com.syu.us | 2125030410 | 3FD98064AEC3914C5D35FBF027B2B9E1CC388CBD95357C22C6BADD01FBFEF2FA | 0 |
+| com.syu.canbus | 2126091414 | 8EBD65505D0F13B1ECAC0FA7A720435A82F879DB647851659F4D5A355CE67A41 | 0 |
+| com.syu.fourcamera2 | 2112291612 | 81AEF2BF7A3E5ECBE7108058BC916C58DD65C3FC40C81CD8BF80F67368FB6AE8 | 1 |
+| com.syu.doublecamera | 2112291612 | 88C340A84261D2076B7680D19A3A7BDD188F4CEDF17C261D0FF68C873691A345 | 2 |
+| com.syu.rightcamera | 2125122009 | 11608679BB5575DDD2591A2816D0DD64305B667D7E0DDF48001DC1931B6F3CAF | 0 |
+
+Enabled0 là default,1 enabled,2 disabled; không cùng ý nghĩa installed. Bảy package đều installed=true/hidden=false/suspended=false cho user0. Không bật lại DC. MS/US/CAN/RC còn bản hệ thống cũ trong dumpsys: phân biệt active với Hidden system packages và hash đúng APK pm path trả về. Không ghi token đường dẫn data/app, địa chỉ mạng, mã truy cập hoặc hình camera riêng vào Git. Runtime display1280×800/160dpi và giới hạn ở [compatibility report](../testing/compatibility-report.md).
+
 ## Phạm vi và công cụ
 
 - Thư mục gốc hiện có `APK/` và `File/`; không thấy `Video/` hoặc file CanBox ở cấp gốc trong lần liệt kê này. Không tải lại từ Drive.

@@ -1,5 +1,46 @@
 # Kiểm chứng Android 10
 
+## Phiên nghiên cứu OEM 18/10/2026 — kết nối và chẩn đoán trực tiếp
+
+Owner cho phép quan sát OEM/chẩn đoán có mục tiêu qua scrcpy và xác nhận xe đứng yên, có người giám sát. Baseline main/0eebfc8f0b4f886673f191259dd87f32c06c6e81 không đổi source Android so với6a02097. Host `scrcpy --version` PASS3.3.4; `adb version` PASS1.0.41/platform-tools36.0.0. Dùng executable trong bộ scrcpy và server riêng, không thay hoặc dừng phiên ADB khác.
+
+Lần đầu `adb -P <dedicated-port> connect <authorized-endpoint>` FAIL timeout10060; get-state không thấy thiết bị, devices rỗng. TCP FAIL trong khi ping PASS; lần thử lại bị từ chối kết nối. Qua AirDroid Business đã xem được màn hình OEM, mở Terminal theo yêu cầu Owner; nhập từ xa ban đầu không hoạt động, sau khi Owner bật/chọn AirDroid Keyboard đã chạy được các lệnh chỉ đọc. `getprop service.adb.tcp.port` ban đầu trả rỗng. Resolve Home từ UID Terminal bị từ chối user-scope; không cấp quyền để vượt lỗi đó.
+
+Owner tiếp tục yêu cầu thực hiện đúng guide để kết nối scrcpy; yêu cầu mới cho phép riêng hai lệnh `setprop service.adb.tcp.port 5555`, `setprop ctl.restart adbd`. Đã gửi từng lệnh qua Terminal/AirDroid, đọc lại port5555; ADB riêng kết nối thành công, get-state=device. Không root mới, đổi SELinux, cấu hình nhà máy, cài TN hoặc đổi Home. IP/mã truy cập và đường dẫn data/app chứa token ngẫu nhiên không lưu trong repo.
+
+| Check thực tế | Kết quả / giới hạn |
+| --- | --- |
+| scrcpy3.3.4 | PASS: helper90980bytes được đẩy/chạy, direct3d renderer, texture1280×800; no-control/no-audio/no-clipboard-autosync/no-power-on,1280px/30fps/2Mbps. Giữ cleanup mặc định; không tính cấu hình30fps là FPS đo được |
+| Fingerprint runtime | OBSERVED: model uis8581a2h10_Automotive, Android10/API29, ABI arm64-v8a/armeabi-v7a/armeabi; wm physical1280×800/160dpi, khác hai profile emulator đại diện |
+| Home hiện tại | OBSERVED: `cmd package resolve-activity --brief --user 0 -a android.intent.action.MAIN -c android.intent.category.HOME` → com.android.launcher8/.Launcher |
+| Active APK | PASS7/7 SHA khớp inventory: L8/MS/US/CAN-new/FC/DC/RC. Dùng pm path bản active; các bản Hidden system packages trong dumpsys không phải active version |
+| Package state user0 | L8/MS/US/CAN-new/RC enabled=0 (default), FC enabled=1, DC enabled=2 (disabled); installed=true/hidden=false/suspended=false cho bảy mẫu. Không enable/disable package |
+| Property có mục tiêu | ro.build.fytmanufacturer=124; ro.fyt.canbus_id/type, persist.fyt.showfloatradar và persist.fyt.radar_click trả rỗng. Rỗng không chứng minh active CAN type hoặc radar on/off |
+| UI OEM qua AirDroid/ADB screencap | OBSERVED: Home gốc có hình phía trước và ghép nhìn từ trên. Snapshot không đo freshness/độ trễ/chất lượng camera hoặc an toàn xe |
+| Nút nổi hình xe, Owner chỉ định thao tác tự động | Đã gửi tap, một lần nhấn120ms và một click qua cửa sổ scrcpy có điều khiển vào đúng nút Owner xác định. Các snapshot sau vẫn mResumedActivity=L8; chưa thấy chuyển sang full-screen camera. Không ghi PASS cho việc mở activity FC hoặc camera ưu tiên |
+| Window camera | OBSERVED: hai window com.syu.fourcamera2 ty=SYSTEM_DIALOG, isOnScreen/isVisible=true; frame[1183,604][1279,700] và[443,147][836,655] ở thời điểm đọc. Đây là cấu hình/layout đang thấy, không là precedence khi lùi |
+| Camera tự lùi / radar transition / trở về Home từ activity camera riêng | Giai đoạn quan sát/nút nổi ban đầu: NOT_RUN. Ca lùi OEM được Owner cho phép tiếp theo và kết quả thực tế ghi riêng dưới đây; radar transition vẫn NOT_RUN |
+
+### Baseline OEM tự chuyển khi lùi — 18-OEM-R01
+
+Owner yêu cầu riêng “Bạn sẽ cùng tôi kiểm tra trực tiếp camera 360 độ tự chuyển khi lùi”, sau đó xác nhận xe đỗ an toàn, đứng yên, có người trực tiếp kiểm soát và khu vực thử đã trống. Quyền này thay giới hạn không thử số lùi của giai đoạn trước, chỉ cho ca OEM hiện tại; không cho phép cài TN/chọn Home hoặc tác động CAN. Người tại xe trực tiếp thao tác chọn R và trở về trạng thái đỗ. Trong ca này Codex chỉ đọc screencap/activity/window qua ADB, không gửi input, broadcast, Binder hoặc lệnh điều khiển xe.
+
+Preflight đầu tiên thấy camera “Phía trước” toàn màn hình và có người gần xe; chưa hướng dẫn chọn R. Owner sau đó xác nhận đã về Home và khu vực trống; lấy lại baseline trước ca thử. Không gán lần thấy camera toàn màn hình này cho những lần chạm nút nổi trước đó vì chưa xác định trigger.
+
+| Mốc / ca riêng | Bằng chứng trực tiếp và xác nhận Owner | Kết quả trong phạm vi OEM |
+| --- | --- | --- |
+| Trước R, Home gốc | Snapshot Home hiển thị P/0, ô camera “Phía trước” và ghép nhìn từ trên; mResumedActivity=com.android.launcher8/.Launcher. Window FC có frame[443,147][836,655]; đây là số đọc UI, không kiểm chứng CAN speed/gear/freshness | PASS: baseline được ghi trước trigger |
+| Chọn R, không bấm nút camera | Owner xác nhận “Đã chọn R, camera tự chuyển sang phía sau”. Snapshot có nhãn “Phía sau”, hình ghép360 và camera toàn màn hình; mResumedActivity=com.syu.fourcamera2/com.syu.fourcamera.act.ActFourCamera. Window FC SYSTEM_DIALOG và activity frame[0,0][1280,800], isOnScreen/isVisible=true | PASS: quan sát một lần tự chuyển camera OEM từ Home L8; chưa kiểm chứng từ app khác/TN |
+| Rời R về trạng thái đỗ, chưa bấm Home/Back | Owner xác nhận camera tự trở về Home. Snapshot và activity xác nhận Home L8 resumed, UI P/0, ô camera “Phía trước”/ghép360 trở lại; window camera frame[443,147][836,655] và nút nổi96×96 | PASS: tự trở lại bố cục Home gốc trong cùng chu kỳ |
+
+Đã quan sát **một chu kỳ** OEM Home→camera phía sau toàn màn hình→Home. Xác nhận trigger vật lý dựa vào người tại xe; không đọc/inject gear qua CAN. Screenshot và activity/window là các mẫu tuần tự, không đồng bộ với thời điểm chọn số: **không đo độ trễ**, FPS, chất lượng/freshness hình, hiệu quả cảnh báo hay độ tin cậy lặp/soak. Radar, app khác ở foreground, cold boot/ACC, TN trên xe và rollback vẫn NOT_RUN. Không nâng TN lên DEVICE_VERIFIED/AUTOMOTIVE_VERIFIED; giữ nguyên trạng thái parity. Ảnh chứa cảnh riêng chỉ nằm trong TEMP ngoài Git; báo cáo giữ kết quả đã khử dữ liệu riêng.
+
+Observer no-control của tác vụ đã kết thúc khi kiểm tra cuối; phiên scrcpy hiện có của Owner vẫn mở và ADB get-state=device. Không dừng phiên đó hoặc server ADB khác. ADB Wi-Fi còn bật theo yêu cầu kết nối; guide có cách tắt khi không sử dụng.
+
+Không có TN DEVICE_VERIFIED/AUTOMOTIVE_VERIFIED mới. Build/unit/lint/instrumentation/E2E **NOT_RUN** trong increment tài liệu; cổng emulator dưới đây là bằng chứng lịch sử cho source không đổi. Rollback/chọn TN Home vẫn chưa kiểm chứng. Quan sát OEM và khả năng ADB shell không chứng minh ordinary-app TN được quyền gọi toolkit.
+
+## Lịch sử — navigation 15/10/2026
+
 15/10/2026 — increment navigation trên worktree `main/15dc34f`: **EMULATOR_GATE_PASSED cho phạm vi Android tại animation1.0**; build/unit/lint, instrumentation và E2E cả hai profile đã PASS cho APK mới. **Full original reconstruction INCOMPLETE; Figma deferred.** Không có DEVICE_VERIFIED hoặc AUTOMOTIVE_VERIFIED.
 
 ## Lượt contract và navigation hiện tại

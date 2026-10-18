@@ -2785,7 +2785,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "f5f444229104b447299d86648f1b83034aad64797de520d9ba74d7a2595176eb",
+      "contentHash": "2abccbad372bcc0d3afc5a3ca37998e1542f6d5fd0676b5e3a06bfcccacff69e",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -2815,7 +2815,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "f3cc9c01d49cafc05d89309ff8a35ba3ff2487370c272666cf4a432268fd667e",
+      "contentHash": "e5d394fdf87b845ff6bc6ba7b655ab1e3b21028f626575622954206116770562",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4601,7 +4601,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "a93c864dabd3e6337ad3e6e2adfad921d4e5421bf8c4302d5a7cbe5aa1b1e1ea",
+      "contentHash": "bde16ade163a9a95b7a445eb9f3c254d426a8308f04a357e5cce7f39a2fdddea",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4616,7 +4616,7 @@
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "4178b0042c93165168a9b388cfef0dce9b85dbe4a2bb12e57524d9d870706ab0",
+      "contentHash": "20197b3484abebb509e93c31b43f6ce77def4a6328a60bec9ab3e7e49dc9128f",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4661,7 +4661,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "a6f53f3d8def3d652f6baf7bd96837dd48a292b0f97d3f7baa79fd633f619a9d",
+      "contentHash": "ade4dc33039fda46db8e4ec621ba5b40225abfa73c37a9c5124d68f21ea777af",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4676,7 +4676,7 @@
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "7c71fd7143be6c1864b00b7dea54fcd574744d084c77b23c6dfefb60a94dac1e",
+      "contentHash": "72ee6d5e3490b995df66fa8c8e57475dac0adea7ca82839dc01b648601ec2f64",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5384,7 +5384,7 @@
         "static-verified"
       ],
       "complexity": "complex",
-      "contentHash": "c4cf16329c1cde40183b047c0d5e090830cadee5ecca5a906542cea2e1b678d2",
+      "contentHash": "c935de0a2ef68f6ab3b4cdf9f65835e90fd0f4abd188e6ba6e7f7089e74c3b9f",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5399,7 +5399,7 @@
         "bàn-giao"
       ],
       "complexity": "moderate",
-      "contentHash": "89403a3375ec09a459a481096436d3d9cc0be6a12cd9374cfa9adb8a35382f69",
+      "contentHash": "fae577316b948cc58e5fd99b0c952dc78a19ca7ba898d7d26b3b9b1b563fe076",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     }
   ],
@@ -9117,6 +9117,42 @@
         "sourceGraphSha256": "f28be59528eef704d1a88ca9b8c1ded7d97d7d50960a44fb307a548889420372",
         "reason": "Cập nhật đúng ba hash tài liệu sau khi Owner cho phép đồng bộ GitHub; giữ provenance của lượt registry, không chạy lại phân tích source hoặc giả nâng private metadata.",
         "validation": "Official schema và 69 LF-normalized contentHash; giữ nguyên toàn bộ node IDs/descriptors ngoài ba doc hashes, edges/layers/tour và các marker lịch sử. Không phải stock incremental PASS."
+      },
+      "latestOemEvidenceDocRefresh": {
+        "mode": "bounded-doc-evidence-working-tree-refresh",
+        "baseCommit": "0eebfc8f0b4f886673f191259dd87f32c06c6e81",
+        "workingTreeDirty": true,
+        "stockIncrementalStatus": "NOT_RUN",
+        "refreshedAt": "2026-10-18T00:00:04.268306+00:00",
+        "reviewedPaths": [
+          "docs/architecture/wincavn-integration.md",
+          "docs/progress/AGENT-REGISTRY.md",
+          "docs/progress/EXECPLAN.md",
+          "docs/progress/STATUS.md",
+          "docs/research/feature-parity-matrix.md",
+          "docs/research/wincavn-resource-inventory.md",
+          "docs/testing/compatibility-report.md",
+          "docs/testing/device-test-checklist.md"
+        ],
+        "fileCount": 69,
+        "unchangedTopology": true,
+        "noSourceReanalysis": true,
+        "reason": "Bounded document refresh for static camera/radar/CAN evidence and authorized OEM observation on 18 October, including one supervised reverse-camera/return cycle. Only eight document hashes change; no configuration, private metadata or TN verification promotion.",
+        "validation": "Official schema and 69 LF-normalized content hashes; preserve 322 nodes, 460 edges, 8 layers, 9 tour steps, source descriptors and historical markers. Stock incremental NOT_RUN; no source reanalysis."
+      },
+      "latestAuthorizedPublicationCheck": {
+        "mode": "bounded-document-publication-check",
+        "baseCommit": "0eebfc8f0b4f886673f191259dd87f32c06c6e81",
+        "workingTreeDirty": true,
+        "checkedAt": "2026-10-18T00:24:41.631345+00:00",
+        "stockIncrementalStatus": "BLOCKED_DIRTY_WORKTREE",
+        "stockIncrementalExitCode": 1,
+        "stockIncrementalBaseCommit": "4491b156a51deeabdb617be92ff33db418652130",
+        "reason": "Owner explicitly requests Understand Anything before GitHub publication. Bundled prepare-incremental was executed and rejected eight uncommitted documents. No stash, bypass or private-metadata advance; bounded working-tree validation is separate from stock incremental success.",
+        "fileCount": 69,
+        "unchangedTopology": true,
+        "noSourceReanalysis": true,
+        "validation": "Bundled scan-project: 69 files, same graph inventory; 69/69 SHA-256 LF-normalized content hashes; official schema, node/edge/layer/tour references, source descriptors, historical refresh markers and 32 private UA files preserved."
       }
     }
   }

@@ -1,5 +1,7 @@
 # Hợp đồng Wincavn đã đối chiếu tĩnh
 
+18/10/2026 — bổ sung [camera/radar, CAN validity và quan sát OEM](#increment18102026--camera-radar-can-và-quan-sát-oem) từ main/0eebfc8. Có chẩn đoán trực tiếp được Owner cho phép; không sửa ứng dụng TN hoặc gọi IPC vendor. Những mô tả “không ADB/thiết bị” trong W1–W8 bên dưới thuộc increment16/10, không mô tả phiên18/10.
+
 16/10/2026 — increment nghiên cứu tĩnh W1–W8 trên `main/6a02097a0d0186a2e2ace70e4ba8c1287176af87`, worktree sạch ở preflight. **STATIC_VERIFIED**; không sửa source/Gradle/Manifest, chạy APK vendor, ADB, IPC, thiết bị, Figma hoặc commit/push. Các mục trước W1 bên dưới giữ provenance nghiên cứu từ15dc34f đã bàn giao trong6a02097; navigation bootstrap là source hiện có, không phải implementation mới của lượt này. [Parity matrix](../research/feature-parity-matrix.md) giữ trạng thái implementation/verification độc lập.
 
 ## Nguồn và tái lập
@@ -408,3 +410,89 @@ Không ứng viên nào được gắn **đủ điều kiện đề xuất** qua
 ## Kết luận increment16/10/2026
 
 W1 HIGH cho guard/đích; W2 HIGH cho Java client/producer và MEDIUM cho field semantics; W3 HIGH cho wrapper/factory nhưng native/active config chưa kết luận; W4 HIGH cho các side effects/getter body đã nêu, không blanket read-only; W5 HIGH cho receiver/schema, MEDIUM cho mismatch và chưa nối delivery; W6 HIGH cho sampled service/navigation paths, runtime chưa kết luận; W7 HIGH metadata/MEDIUM classification; W8 HIGH provenance index. Mọi nhánh cần runtime/firmware giữ DEVICE_TEST_REQUIRED. Implementation không đổi, full reconstruction INCOMPLETE, Figma deferred. Gradle/lint/instrumentation/E2E NOT_RUN vì chỉ tài liệu/graph; không nâng mức từ cổng emulator cũ.
+
+## Increment18/10/2026 — camera radar CAN và quan sát OEM
+
+Owner giao hai nhánh nghiên cứu và quan sát OEM khi xe đứng yên, có người trực tiếp giám sát. Baseline main/0eebfc8f0b4f886673f191259dd87f32c06c6e81 sạch; source Android không đổi so với6a02097 đã vượt cổng emulator lịch sử. Hai agent tạo output riêng ngoài repo trong TEMP/tn-oem-20261018; khi agent chạm giới hạn sử dụng, Codex chính đọc lại SIMPLE/raw DEX và tiếp quản kết luận. Không nhập mã vendor hoặc thêm adapter/test/permission vào TN.
+
+### Camera/radar: điều kiện decoder và khôi phục window
+
+- `18-CAM-01`: MS `k0.vt.h0(int):k0.qt` tách low/high16. Nhánh low452/high134 tạo `k0.ml` (packed8782276); khác low448/high23/type1507776 tạo `jl`. Không áp dụng tác dụng của `ml` cho Limo chỉ vì cả hai cùng nằm trong MS. `vt.J(int):void` có guard readiness `m1.a.c`, có thể lấy override từ `ro.fyt.canbus_id/type`; khi type đổi, gọi decoder cũ `W2`, reset1000 phần tử `st.g`, thay decoder rồi gọi `S2`. Type không đổi không chạy lại chuỗi khởi tạo đó. Đây là điều kiện trong code, chưa xác nhận decoder thực trên xe.
+- `18-CAM-02`: `ml.S2():void` đăng ký receiver Android cho action RECV, cùng listener/runnable; `ml$c.onReceive(Context,Intent):void` chỉ cập nhật cờ `ml.e` từ Boolean `Show` khi action khớp và extras tồn tại. Không có extras thì giữ cờ; extras có nhưng thiếu `Show` đi nhánh false. Cờ khởi tạo false; không KEY_TYPE guard. `ml.U2(byte[],int,int):void` đọc cờ chỉ ở nhánh input64/value1 để chọn `u0.d.b0(1/0)` theo đường MCU đã chứng minh ở W5. Nhận broadcast không tự gọi MCU. `ml.W2():void` gỡ listener, hủy runnable và unregister receiver nếu khác null; không xóa cờ hoặc đặt receiver=null trong method. Không chứng minh queue/race runtime đã được loại bỏ.
+- `18-CAM-03`: US `app.App.onCreate():void` gọi `registerLocalReceiver():void`; method dùng LocalBroadcastManager cho ACC nhưng dùng `Application.registerReceiver` thực cho `myRev`/RECV. Không có unregister của chính `myRev` trong direct-reference census toàn bộ DEX của mẫu. Không suy receiver sống khi process chưa khởi tạo hoặc sau process death.
+- `18-CAM-04`: US `broadcast.MyReceiver.onReceive(Context,Intent):void` nhận `Show=true` thì yêu cầu `FloatRadarWindow.show(false)` nếu window tồn tại, rồi đặt `mFloatRadarWindowRemoveByOther=true`; false/thiếu thì chỉ đặt false, không gọi show(true). Census field trong **classes.dex duy nhất của US** có đúng3 direct writes (constructor và hai nhánh receiver), **0 direct reads**. Vì thế tên cờ và mô tả suppression của W5 không chứng minh nó ngăn radar hiện lại. Census không loại trừ reflection/native hoặc firmware ngoài mẫu; không gọi test action của receiver.
+- `18-CAM-05`: đường hiện lại riêng là `App$3.onNotify(int,int[],float[],String[]):void` → `FloatRadarWindow.refreshNewRadar():void`. Nhánh radar bỏ qua manufacturer128; cần `persist.fyt.showfloatradar=true`, main12=0, một trong hai device string RadarTianCheng#9600/RadarXiaoFD#9600 và `persist.fyt.radar_click=true`. Có thể tạo window rồi refresh; các guard không đạt có nhánh yêu cầu hide. Refresh xét dữ liệu radar0..9, các kết quả setRadar0/10/255 và `hasValue`; có giá trị thì yêu cầu show nếu `bShow=false`, không có thì có thể hẹn hide5000ms. `show(boolean)` post UI runnable; `$1.run` mới addView/đặt bShow=true và có retry khi lỗi, `$2.run` mới removeView/đặt false khi thành công. Không có kiểm tra cờ RemoveByOther ở những đường này. Đây không là bảo đảm thứ tự callback, z-order hoặc tái xuất hiện radar thực.
+
+| Ca symbolic camera | Kết quả từ code đã đối chiếu; không phát broadcast |
+| --- | --- |
+| MS đúng action, extras null | Không đổi cờ; không có MCU call từ receiver |
+| MS extras có Show=true/false/thiếu | Gán true/false/false; chỉ nhánh input64/value1 sau đó mới dùng cờ |
+| Lặp Show=true | Gán cờ lại; US vẫn yêu cầu hide nếu window tồn tại, không suy chỉ chạy một lần |
+| US Show=true, window null | Chỉ đặt cờ true; không tạo/hide window |
+| US Show=false hoặc thiếu | Chỉ xóa cờ, không tự khôi phục radar |
+| Cleanup hoặc đổi decoder MS | Gỡ receiver/runnable đã nêu; không xác minh callback đang chạy/queue hay camera precedence |
+| Radar callback tiếp theo | Xét guard/property/main12/device/data độc lập; không direct-read RemoveByOther trong mẫu |
+
+### CAN1049: envelope, giá trị và tuổi dữ liệu
+
+`18-CAN-01`: MS `z.i.b(byte[]):void` ghép frame8855 trong backing buffer1024, kiểm length khai báo≤512, chờ đủ byte checksum và đối chiếu XOR trước khi gọi `f(byte[],int,int):void`. Nhánh MCU0xE3 của `f` chuyển cùng buffer sang `qt.U2` với offset/length đã điều chỉnh. Trong ba nhánh `jl.U2` đang xét, logical length không guard từng chỉ số; tham số length chỉ xuất hiện ở nhánh string/version khác. Checksum outer-frame không chứng minh đủ chiều dài inner packet. Buffer được copy/compact và tái sử dụng, không xóa toàn bộ đuôi trong `b`; đọc vượt logical payload có thể chạm checksum/packet kế tiếp/byte còn trong buffer — đây là suy luận tĩnh, không phải lỗi phần cứng hoặc crash đã tái hiện.
+
+`18-CAN-02`: đặt p là offset đầu packet vào `jl.U2`, u8 là byte&255:
+
+| Nhánh | Chuyển đổi / publisher1049 | Giới hạn |
+| --- | --- | --- |
+| p[0]=0,0xA1/sub25 | flag1 = u8(p[7])*256+u8(p[8]); đồng thời update1031 cùng số nguyên | 0..65535, không scale/sentinel trong nhánh; toàn sub25 đọc tới p[18], nên19 byte là điều kiện bao phủ tất cả read, không phải guard có sẵn |
+| 0xA1/sub32 speed | flag1 = u8(p[4]); đồng thời1031 | 0..255, không chứng minh km/h dù tên view/nhãn Home gợi ý |
+| 0xA1/sub32 range | Đọc high từ p[12] trước; nếu p[2]==9 thì dùng u8(p[5]), ngược lại dùng u8(p[12])*256+u8(p[5]); phát flag5 | Nhánh byte9 vẫn thực hiện read p[12] trước khi bỏ high. Cần13 byte để bao phủ read; không có kiểm tra miền hợp lệ/đơn vị vật lý trong đường này |
+| 0xA1/sub32 gear | flag4 = u8(p[8]) | Forward trực tiếp0..255, không normalize giá trị không rõ |
+| 0xF2/sub17 gear | Raw1→4(P),2→3(R),3→2(N),4→1(D) | Raw0/255/khác trả về không phát gear; không phát [4,0]. Read tới p[4] cần5 byte |
+
+`18-CAN-03`: `o1.x.C(o1.x[],int,int[],float[],String[]):void` chỉ fan-out qua slot/listener đang tồn tại, không ghi snapshot1049 vào cache trong method. `wt.Y1(y.b,int,int):void` không có nhánh snapshot1049; register với update!=0 rơi xuống `jl.Y1`, mà method chỉ snapshot ID0..144. Vì vậy reconnect/register1049 không bảo đảm nhận ngay speed/range/gear. Reset `st.g` khi đổi type không tự là một callback invalidation1049.
+
+`18-CAN-04`: L8 `Launcher$10.onRefresh(int,int[],float[],String[]):void` chỉ nhận ints khác null và length≥2, lấy [flag,value], bỏ message đang chờ cùng1049+flag rồi post message mới. Handler `Launcher$19.handleMessage(Message):void` đưa flag1/5 thành chuỗi số, flag3 chọn park khi value==0, flag4 gọi `setGear(int):void`. Không thấy timestamp/TTL/invalidation của speed/range/gear ở publisher→callback→handler này; không suy toàn firmware không có cơ chế đó. `RemoteTools.onServiceDisconnected(ComponentName):void` đặt toolkit=null rồi retry bind khi autoConn, hoặc yêu cầu unregister codes ở nhánh còn lại, không có đường clear ba view trong method. View mới được tạo lại và view đang giữ dữ liệu cũ là hai trường hợp khác nhau.
+
+`18-CAN-05`: `Launcher.setGear(int):void` chỉ làm việc nếu đủ bốn TextView. Case0 không chọn gear;1/2/3/4 chọn D/N/R/P; **default cũng chọn D** trong mẫu L8. Vì sub32 chuyển raw gear trực tiếp, raw255 có thể đi default D theo code nếu views tồn tại; F2 raw255 lại không phát event. Không sao chép fallback này vào TN. Chưa bơm packet hoặc đo hiện tượng trên xe.
+
+| Ca symbolic CAN | Kết quả tính toán/đường code; không chạy parser vendor |
+| --- | --- |
+| Outer length>512 hoặc XOR sai | Không đi dispatch của frame đó trong nhánh ghép8855 đã đọc |
+| Outer checksum đúng nhưng inner packet ngắn | Chưa được coi hợp lệ; thiếu guard logical length, backing-buffer bounds là điều kiện khác |
+| Sub25 speed bytes00/00 và FF/FF | Giá trị0 và65535; chưa có sentinel hoặc đơn vị được chứng minh |
+| Sub32 speed00/FF | Giá trị0/255, không tự đổi thành unknown |
+| Sub32 low=01/high=02, inner byte9 / khác9 | Range1 /513; cả hai đã đọc high; low/high FF/FF cho255 /65535 |
+| Gear raw0/1/2/3/4/255 qua sub32 | Case none/D/N/R/P/defaultD nếu đủ views |
+| Cùng raw qua F2/sub17 | Không event/P/R/N/D/không event; không đồng nghĩa xóa view cũ |
+| Không có packet mới, reconnect hoặc type đổi | Không có bằng chứng TTL/initial snapshot1049/explicit invalidation ba field trong các method đã đọc; không hiển thị dữ liệu sống từ suy đoán |
+
+### Provenance bổ sung
+
+Offset CU là code-unit tương đối đầu method trong đúng DEX; không phải line source gốc. SIMPLE và raw DEX được tái tạo từ APK khớp hash bằng Java21.0.8/JADXdev/dexlib2; output dưới TEMP/tn-oem-20261018/camera và can. Các Evidence ID mới bổ sung, không thay88 dòng W8.
+
+| ID | APK / SHA-256 đầy đủ | Signature / mốc CU và cạnh | Confidence tĩnh |
+| --- | --- | --- | --- |
+| 18-CAM-01 | MS / 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | k0.vt.h0(int):k0.qt CU92→5800,6706–6715; vt.J(int):void CU151/289/314 → W2/h3/S2 | HIGH cho nhánh/guard, active UNKNOWN |
+| 18-CAM-02 | MS / 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | k0.ml.S2():void CU49 register; ml$c.onReceive(Context,Intent):void CU29/35 cờ; ml.U2(byte[],int,int):void CU429–437 read→b0; ml.W2():void CU22 unregister | HIGH |
+| 18-CAM-03 | US / 3FD98064AEC3914C5D35FBF027B2B9E1CC388CBD95357C22C6BADD01FBFEF2FA | app.App.onCreate():void CU327 → registerLocalReceiver():void; myRev direct references và unregister census toàn classes.dex | HIGH cho registration/direct census |
+| 18-CAM-04 | US / 3FD98064AEC3914C5D35FBF027B2B9E1CC388CBD95357C22C6BADD01FBFEF2FA | broadcast.MyReceiver.onReceive(Context,Intent):void CU101 hide,109/123 writes; App.<init>():void CU61 write; 0 direct field reads trong DEX mẫu | HIGH cho direct references; firmware/reflection UNKNOWN |
+| 18-CAM-05 | US / 3FD98064AEC3914C5D35FBF027B2B9E1CC388CBD95357C22C6BADD01FBFEF2FA | app.App$3.onNotify(int,int[],float[],String[]):void → com.lsec.core.frame.ctrl.dynamic.FloatRadarWindow.refreshNewRadar():void/show(boolean):void → FloatRadarWindow$1/$2.run():void | HIGH cho guards và posted window paths, runtime order UNKNOWN |
+| 18-CAN-01 | MS / 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | z.i.b(byte[]):void length/XOR/copy; z.i.f(byte[],int,int):void CU2135–2139 → qt.U2(byte[],int,int):void; jl.U2 length-register uses census | HIGH cho code, ảnh hưởng malformed runtime UNKNOWN |
+| 18-CAN-02 | MS / 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | k0.jl.U2(byte[],int,int):void CU74–140 F2;699–800 sub32;1931–1989 sub25; o1.x.C(o1.x[],int,int[],float[],String[]):void | HIGH conversion/forwarding, physical units UNKNOWN |
+| 18-CAN-03 | MS / 0494EA8CA3BE1B317A832C5E58761DA5E6A31EBCFAFD2662405E7ED1CD63043C | k0.wt.Y1(y.b,int,int):void CU494–501 → jl.Y1(y.b,int,int):void CU0–19; vt.J(int):void reset st.g; o1.x.C/s fan-out | HIGH trong scope, freshness runtime UNKNOWN |
+| 18-CAN-04 | L8 / F6BB96726180B12284AF05261F5F3AFB464FC9C37A74A954D908C700A198BE84 | com.android.launcher8.Launcher$10.onRefresh(int,int[],float[],String[]):void CU0–40 → Launcher$19.handleMessage(Message):void; com.syu.remote.RemoteTools.onServiceDisconnected(ComponentName):void | HIGH cho sampled consumer/lifecycle |
+| 18-CAN-05 | L8 / F6BB96726180B12284AF05261F5F3AFB464FC9C37A74A954D908C700A198BE84 | com.android.launcher8.Launcher.setGear(int):void CU0–20 null-guard/defaultD; switch CU17/payload124 cases0..4 | HIGH cho static default; không runtime claim |
+
+### Quan sát OEM và phần chưa kiểm chứng
+
+Qua AirDroid/Terminal đã đọc Android10/API29, model uis8581a2h10_Automotive, ABI arm64-v8a/armeabi-v7a/armeabi, physical1280×800/160dpi và manufacturer124. Home gốc từng hiển thị hình camera phía trước trong giao diện; đây là snapshot quan sát, không chứng minh tự lùi/radar/latency. Lần resolve Home từ UID Terminal bị từ chối vì user scope; không cấp quyền để vượt lỗi. Sau yêu cầu mới của Owner thực hiện đúng guide, đã đặt cổng ADB và restart adbd; server riêng kết nối device, scrcpy3.3.4 chạy no-control/no-audio/no-clipboard-autosync/no-power-on và texture1280×800. ADB user0 resolve Home là com.android.launcher8/.Launcher. Không cài TN hoặc đổi Home.
+
+SHA-256 bảy APK đang cài (L8/MS/US/CAN-new/FC/DC/RC) khớp inventory; MS/US/CAN/RC có cả bản hệ thống cũ trong dumpsys, nên dùng pm path của bản active để hash, không gán version của Hidden system packages cho bản active. DC user0 enabled=2, FC enabled=1; giữ nguyên. ro.fyt.canbus_id/type và hai property radar trả rỗng: không đồng nghĩa CAN type0, không chứng minh radar bị tắt; decoder active vẫn UNKNOWN. Không bind/read toolkit để lấy state. [Compatibility report](../testing/compatibility-report.md) ghi kết quả thực và giới hạn; Owner đã chỉ định tự động chạm nút nổi và cung cấp ảnh nhận dạng. Đã gửi tap, nhấn120ms qua Android input và một click qua cửa sổ scrcpy có điều khiển hiện có; Home vẫn resumed sau các lần quan sát của giai đoạn đó, chưa gán được fullscreen transition cho nút nổi. Mọi trạng thái parity TN giữ nguyên.
+
+**18-OEM-R01 — quan sát runtime riêng, không phải Evidence ID tĩnh:** Owner tiếp tục cho phép cùng kiểm tra tự chuyển khi lùi, xác nhận lại điều kiện đỗ/giám sát/khu vực trống và trực tiếp thao tác số. Baseline Home L8 resumed, UI P/0 và camera “Phía trước” trong frame[443,147][836,655]. Khi Owner xác nhận chọn R không bấm camera, snapshot thấy nhãn “Phía sau”/ghép360 toàn màn hình; ActFourCamera resumed, window FC SYSTEM_DIALOG và activity frame[0,0][1280,800] visible. Khi Owner xác nhận trở về trạng thái đỗ, camera tự trở lại ô phía trước và Home L8 resumed, không nhấn Home/Back. Ba mốc có screencap/activity/window trong TEMP riêng; không input/IPC vendor từ Codex trong ca này. Kết quả đủ ghi một chu kỳ tự chuyển/về Home **OEM**, không xác định main134/12, active decoder, callback chain, radar, thời gian trễ hoặc quyền/precedence TN. [Kết quả ca riêng](../testing/compatibility-report.md#baseline-oem-tự-chuyển-khi-lùi--18-oem-r01); không nâng mức verification của implementation TN.
+
+### Bổ sung nút nổi được Owner xác định — 18-CAM-06
+
+FC `com.syu.fourcamera.App_FourCamera.showFloatBtn(boolean):void` tạo Button dùng drawable float360, gắn onClick/onTouch, size96×96 ngoài customer128. `App_FourCamera$30.onTouch(View,MotionEvent):boolean` có ngưỡng UP/CANCEL dưới300ms→performClick; MOVE có thể cập nhật vị trí/persistence, nên không thử kéo nút. `App_FourCamera.onClick(View):void` đặt bPipMode/bBring2Top=false; nếu bPos_Launcher=true thì chỉ `send_PIP_Hide("com.lsec.tyz.action.voice.launcher.fullscreen")` rồi return; nhánh false mới run show_3DRoundView và gửi forward-camera event. Nhánh fullscreen nối với gap delivery W5, không chứng minh lần chạm thực đã đi nhánh này. Không phát action thủ công để vượt đường UI.
+
+Provenance18-CAM-06: FC SHA-256 **81AEF2BF7A3E5ECBE7108058BC916C58DD65C3FC40C81CD8BF80F67368FB6AE8**; classes.dex, onClick CU0–32, send_PIP_Hide(String):void CU0–13, `$30.onTouch` CU203–228 threshold→performClick. SIMPLE của App_FourCamera và raw DEX cùng xác nhận branch. CLI xuất riêng anonymous$30 bị DONT_GENERATE; dùng raw DEX method đầy đủ thay thế, không coi lượt CLI đó PASS. Confidence **HIGH** cho code handler, active branch/delivery **UNKNOWN**. Không trực tiếp gửi IPC vendor; thao tác UI OEM có thể kích hoạt handler nội bộ của app gốc.
+
+Đối chiếu property: showfloatradar trả rỗng sẽ cho mặc định false trong nhánh US18-CAM-05 nếu callback đọc cùng giá trị đó. Đây là suy luận có điều kiện cho nhánh đã đọc, không là quan sát toàn bộ radar bị tắt. Giá trị0 trong setRadar cũng không tự đồng nghĩa dữ liệu lỗi vật lý.
