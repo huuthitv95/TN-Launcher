@@ -2815,7 +2815,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "e5d394fdf87b845ff6bc6ba7b655ab1e3b21028f626575622954206116770562",
+      "contentHash": "f056fe1ff0cefaba74884b4b77c833b42bdc765e54e82bbdcfe557570be2e7e5",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4571,7 +4571,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "8c1ebe973c74dd26abcda07cf5eed1b727bb3655a634998e39fac3af3e4a10d3",
+      "contentHash": "020682160d22f8cf4e4db2a891f2bad72862d637a09f87e647bfec84eb9540be",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4601,7 +4601,7 @@
         "kiến-trúc"
       ],
       "complexity": "moderate",
-      "contentHash": "bde16ade163a9a95b7a445eb9f3c254d426a8308f04a357e5cce7f39a2fdddea",
+      "contentHash": "947b2eabd2f2084b7e8c2cf0c4d094df1c691b42a2c3ad35b2ed5da43d63fde4",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -4616,7 +4616,7 @@
         "kiến-trúc"
       ],
       "complexity": "simple",
-      "contentHash": "20197b3484abebb509e93c31b43f6ce77def4a6328a60bec9ab3e7e49dc9128f",
+      "contentHash": "51c33e8d126e189c822f00493e9805a99eace4d5e8e8aa6cf455842bc5162635",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     },
     {
@@ -5399,7 +5399,7 @@
         "bàn-giao"
       ],
       "complexity": "moderate",
-      "contentHash": "fae577316b948cc58e5fd99b0c952dc78a19ca7ba898d7d26b3b9b1b563fe076",
+      "contentHash": "b52c95354996b8d9d98fdae24f5258d06de4f5e155afc81e3d1db43582eb8ee7",
       "hashAlgorithm": "sha256-lf-normalized-bytes"
     }
   ],
@@ -9152,7 +9152,43 @@
         "fileCount": 69,
         "unchangedTopology": true,
         "noSourceReanalysis": true,
-        "validation": "Bundled scan-project: 69 files, same graph inventory; 69/69 SHA-256 LF-normalized content hashes; official schema, node/edge/layer/tour references, source descriptors, historical refresh markers and 32 private UA files preserved."
+        "validation": "Bundled scan-project: 69 files, same graph inventory; 69/69 SHA-256 LF-normalized content hashes; official schema, node/edge/layer/tour references, source descriptors, historical refresh markers and 32 private UA files preserved.",
+        "isolatedCleanAttempt": {
+          "headCommit": "2f8ceaa77f2fc32626a3498d859d35153d2cb305",
+          "graphBaseCommit": "15dc34fbc7621bd826497d352bf288e7eb491261",
+          "prepareStatus": "PARTIAL_UPDATE",
+          "changedFiles": 6,
+          "batches": 4,
+          "extractionStatus": "PASS",
+          "mergeStatus": "BLOCKED_STRICT_PARSER_API",
+          "error": "parser.analyzeFileStrict is not a function",
+          "affectedLocalIdentities": [
+            "setState",
+            "acknowledgement.onReceiveResult"
+          ],
+          "targetedRetries": 1,
+          "finalizeStatus": "NOT_RUN",
+          "sharedCandidateCopied": false,
+          "sharedPrivateStatePreserved": true
+        }
+      },
+      "latestFigmaHandoffDocRefresh": {
+        "mode": "bounded-document-working-tree-refresh",
+        "baseCommit": "2f8ceaa77f2fc32626a3498d859d35153d2cb305",
+        "checkedAt": "2026-10-18T00:31:42.030733+00:00",
+        "reviewedPaths": [
+          "docs/design/design-system.md",
+          "docs/progress/AGENT-REGISTRY.md",
+          "docs/progress/EXECPLAN.md",
+          "docs/progress/STATUS.md",
+          "docs/research/wincavn-resource-inventory.md"
+        ],
+        "workingTreeDirty": true,
+        "stockIncrementalStatus": "BLOCKED_STRICT_PARSER_API",
+        "noSourceReanalysis": true,
+        "unchangedTopology": true,
+        "fileCount": 69,
+        "reason": "Owner authorizes GitHub publication and Figma design continuation. Record Figma reauthentication blocker, verified local assets and future signal/hazard audio requirements. Only existing document hashes change; preserve source descriptors, historical markers and private UA state. This is not stock incremental success."
       }
     }
   }

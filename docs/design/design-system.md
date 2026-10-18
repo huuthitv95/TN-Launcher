@@ -6,6 +6,23 @@ Giao diện native Android Views, landscape-first và thích ứng với diện 
 
 Phần chức năng MVP đã được triển khai: Home phân trang, Dock, Drawer/tìm kiếm, Settings, theme, hình nền và lưu bố cục. UI hiện dùng lưới ứng dụng native, nền gradient, Dock có icon favorite cùng nút chữ Ứng dụng/Cài đặt và Settings dạng danh sách cuộn cơ bản. Chưa hoàn tất lượt đối chiếu và tinh chỉnh độ trung thực iPadOS về khoảng cách, phân cấp thị giác, cách trình bày Dock và sự đồng nhất của icon. Có chức năng không đồng nghĩa đã hoàn tất phần hình ảnh hoặc cổng kiểm thử; xem [compatibility report](../testing/compatibility-report.md) để biết kết quả thực tế.
 
+### Figma được Owner giao tiếp — 18/10/2026
+
+File làm việc hiện tại là [TN Launcher4VroI0Z4ZyPNYu50tXDl6u, node3:2](https://www.figma.com/design/4VroI0Z4ZyPNYu50tXDl6u/TN-Launcher?node-id=3-2); reference vẫn là [iOS and iPadOS27](https://www.figma.com/design/z9h85ehDzhCsLpV5n7M0Kb/iOS-and-iPadOS-27). Đây khác file Notion v1 lịch sử; không dùng 34 frame links cũ làm bằng chứng nội dung trong file mới. Owner giao Codex tiếp tục chỉnh Figma, chưa giao tích hợp Android.
+
+Trạng thái **DESIGN_BLOCKED_CONNECTION**: connector trả UNAUTHORIZED/Reauthentication required; đã yêu cầu kết nối lại. Desktop nhìn thấy file TN Launcher và page Cover & Index, Foundations, Components, Home+Dock Option A/B, Compare & Icon Study, Assets; chưa xác minh component/token/font trong file hoặc chỉnh node có readback. Không tuyên bố DESIGN_COMPLETE hoặc pixel-perfect. Sau khi có kết nối, dùng1280×800/160dpi đã đo làm bố cục chính, giữ profile emulator riêng và tham chiếu grid/Dock; hoàn thiện light/dark, font-scale1.5, error/empty/loading, Search/IME/Back, Settings/persistence và trạng thái vendor chưa khả dụng. Không đưa dữ liệu xe hoặc camera giả vào Home.
+
+Đã kiểm tra lại nguồn font116file bằng fontTools4.63.0, không lỗi parse; các font được chọn vẫn đúng hash bên dưới. SF Pro Text/Display có đủ tám combining marks đã xét, MRCH NewYork thiếu cả tám, chỉ dùng brand cố định. Icon nguồn PNG RGBA1254×1254,1.696.980byte, SHA-256 `C44B6095537EA5DE410366B7E47EE8ED8C0AD1DE131304756CC07727ADD1BB8E`; giữ tỷ lệ và không đổi file gốc. File có trên đĩa không tự chứng minh font đã khả dụng trong Figma; cần list/load exact family/style khi kết nối hoạt động.
+
+### Âm thanh xi nhan/hazard — yêu cầu triển khai sau
+
+Owner chỉ định `C:/Users/ZGAMESVN/Downloads/Resource_For_TN_Launcher/Turn_Signal.wav`: WAV PCM24bit, stereo48kHz,480000frame/10,000giây,2.880.044byte; SHA-256 `F8DE22A8235D0D59DA97AE37D4057C872B21CF1EB8D65BC439560AAE8BB8FB91`. Đã đọc metadata/hash; không phát thử, chỉnh/cắt nguồn hoặc đưa binary mới vào Git. Đây là yêu cầu tương lai, chưa là chức năng đã triển khai.
+
+- Đèn hiển thị và tiếng phải cùng nguồn event OEM có thẩm quyền: trái/phải/hazard, cạnh bật/tắt, phase/sequence và timestamp/freshness. Chỉ biết trạng thái bật mà thiếu phase thì giữ VENDOR_DEPENDENT; không tự tạo nhịp bằng timer hoặc loop toàn WAV10giây.
+- Dùng một clock monotonic với ánh xạ clock nguồn rõ ràng; preload sample trước khi phát, không đọc/giải mã ở từng cạnh. Hazard dùng một phase chung/một tiếng mỗi cạnh được chọn, tránh hai kênh tạo tiếng đôi. Chưa xác định đoạn sample/edge mapping cuối từ metadata WAV.
+- Event stale/mất kết nối/đổi lifecycle phải hủy lịch và dừng tiếng; không phát bù các tiếng đã trễ hoặc giữ trạng thái hoạt động từ cache cũ. Không gọi CAN/MCU hoặc điều khiển đèn xe để thử UI.
+- Nghiệm thu sau này phải chốt ngưỡng phase error audio–visual so với cạnh OEM, đo latency p50/p95/max, missed/duplicate clicks và drift chuỗi dài trên đúng phần cứng sau emulator gate/ủy quyền riêng. Prototype Figma hoặc việc load WAV không chứng minh không khựng/không delay. Ngưỡng chưa chốt và phép đo **NOT_RUN**; không cam kết zero latency.
+
 ## Token và bố cục
 
 | Thuộc tính | Giá trị triển khai |

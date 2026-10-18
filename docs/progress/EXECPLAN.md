@@ -1,6 +1,20 @@
 # TN Launcher — living implementation and reconstruction plan
 
-## Active task — 18/10/2026 camera/radar and CAN evidence
+## Active task — 18/10/2026 publication and Figma continuation
+
+Scope/non-goals: Owner explicitly requests Understand Anything, commit/push all reviewed work to canonical GitHub, then direct design continuation in file4VroI0Z4ZyPNYu50tXDl6u, reference z9h85ehDzhCsLpV5n7M0Kb. This supersedes earlier no-publication/no-Figma scope only. Preserve Android source, original resources, vehicle/Home settings and GitLab; no Android integration or new hardware/audio test.
+
+As-is evidence: nine OEM documentation/graph files at main0eebfc8 were reviewed and saved in local commit2f8ceaa after the first stock dirty-guard failure. Origin fetch showed no conflicting update. The previous graph analysis-base15dc34f differs from private meta4491b15, so clean retry was isolated in a TEMP worktree rather than replacing shared state.
+
+Steps/progress: official isolated prepare PARTIAL_UPDATE6files and compute-batches4batch PASS; extraction/semantic analysis completed. Merge and the one permitted targeted symbol retry both fail because the installed strict validator calls missing `parser.analyzeFileStrict`. Two existing Kotlin local identities remain unverified; no symbol removal was accepted, no candidate finalized or copied to shared graph. Record the stock failure, validate current graph and publish the reviewed documents without presenting this as incremental PASS.
+
+Design/decisions: verify target file and its existing editable components/tokens before creating screens. Figma connector currently requires reauthentication; Desktop file/page navigation was observed but no design mutation is confirmed. Continue after connection with main1280×800/160dpi layouts, existing typography, light/dark and large-text states, Home/Dock/Drawer/Search/Settings/error/persistence flows; preserve any existing Figma work. Source fonts/icon/WAV have been technically inspected. Future turn-signal/hazard sound must share authoritative phase and monotonic timing with the displayed indicator; acceptance measurements are defined in the existing design system, not claimed from a Figma prototype.
+
+Validation/risks/rollback: current graph schema/69hashes and previous OEM parity/W8 checks remain independent of stock failure. Publication rehash of external APKs stopped because the archive path is now absent; retain historical results and do not recreate/download or delete external resources. No new build/unit/lint/instrumentation/E2E or vehicle tests. Review all staged files/privacy and normal GitHub push; never force-push. Reversible document changes use Git history; shared UA state/source/config preserved.
+
+Outcomes: publication is explicitly authorized; exact resulting SHAs and remote delivery are Git evidence. Design editing remains BLOCKED_CONNECTION until Figma reauthentication; asset inspection and future audio requirements are ready. Do not declare DESIGN_COMPLETE, Android integration readiness or zero audio latency. No GitLab/cloud-note synchronization.
+
+## Previous task — 18/10/2026 camera/radar and CAN evidence
 
 Scope/non-goals: Owner approved combined static research and supervised stationary-vehicle observation. Clean baseline main/0eebfc8f0b4f886673f191259dd87f32c06c6e81; Android source is unchanged from the emulator-gated 6a02097 source. Subsequent explicit requests authorize the guide's two temporary ADB-enable/restart commands, Terminal control, the identified camera floating-button click and then a separately supervised OEM automatic-reverse-camera case. Owner alone handles the physical gear selection; Codex only observes during that case. No TN installation/default-Home change, direct vendor IPC/native calls, factory settings, elevated permission grants, cloud synchronization or commit/push. Keep access codes/network endpoints/private images out of Git.
 

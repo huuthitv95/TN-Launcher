@@ -1,6 +1,16 @@
 # Trạng thái TN Launcher
 
-## Hiện tại — 18/10/2026: nghiên cứu camera/radar và CAN
+## Hiện tại — 18/10/2026: Understand Anything, GitHub và thiết kế Figma
+
+Owner yêu cầu chạy Understand Anything, commit/push toàn bộ thay đổi hợp lệ lên GitHub rồi tiếp tục thiết kế trong file [TN Launcher mới](https://www.figma.com/design/4VroI0Z4ZyPNYu50tXDl6u/TN-Launcher?node-id=3-2). Yêu cầu này cho phép publication và chỉnh Figma; thay giới hạn tương ứng của phiên OEM dưới đây, không mở scope Kotlin/XML, cài TN, đổi Home, test xe mới hoặc đồng bộ GitLab. Đã fetch origin/main và đối chiếu cùng baseline0eebfc8; commit local đầu tiên2f8ceaa lưu chín file OEM/graph. SHA/kết quả publication cuối đối chiếu Git, không tự sửa remote history.
+
+**UA stock BLOCKED_STRICT_PARSER_API:** prepare ban đầu bị dirty guard; sau commit, meta4491b15 và graphbase15dc34f không khớp. Đã chạy workflow chính thức trong worktree TEMP cô lập với actual graphbase15dc34f: prepare PARTIAL_UPDATE6files, batching4batch và extraction/semantic PASS; merge rồi đúng một targeted retry vẫn lỗi `parser.analyzeFileStrict is not a function` ở hai local Kotlin identities. Không finalize/copy candidate hoặc sửa plugin để bỏ guard. Graph đang dùng vẫn qua schema chính thức/69 LF hashes; source descriptors/topology và UA private state được giữ nguyên. Bounded hash refresh tài liệu publication/design được ghi marker riêng, không gọi là stock incremental PASS.
+
+**Figma DESIGN_BLOCKED_CONNECTION:** plugin hai lần trả UNAUTHORIZED/Reauthentication required cho file mới và reference; chưa đọc được node3:2 hoặc chỉnh thiết kế qua API. Desktop đã thấy đúng file TN Launcher, các page Cover/Foundations/Components/Home+Dock Option A/B/Compare/Assets; đây chỉ là quan sát UI, chưa inventory component hoặc duyệt design. Các thử điều hướng Desktop chưa tạo/chỉnh node thiết kế được xác nhận. Đã yêu cầu Owner kết nối lại Figma; không coi page list hoặc 34 frame links của file cũ là kết quả thiết kế trong file mới.
+
+Đã kiểm tra nguồn font116file bằng fontTools, icon1254×1254 và WAV10giây/PCM24bit/48kHz/stereo. SF Pro Text/Display đủ combining marks; NewYork chỉ brand cố định. [Design system](../design/design-system.md) ghi tài nguyên và contract tương lai cho âm thanh xi nhan/hazard: đồng bộ cùng phase/clock nguồn OEM, không loop WAV độc lập, không phát bù event trễ. Chưa triển khai/phát thử âm thanh hoặc kiểm chứng độ trễ. Archive wincavn ngoài repo hiện không truy cập được ở đường dẫn cũ; lượt rehash publication không chạy được, không phủ nhận bằng chứng hash lịch sử của phiên OEM. Không có source/APK mới hoặc test Android/xe mới.
+
+## Phiên trước — 18/10/2026: nghiên cứu camera/radar và CAN
 
 Owner giao hai nhánh nghiên cứu và quan sát/chẩn đoán OEM khi xe đứng yên có giám sát. Baseline main/0eebfc8f0b4f886673f191259dd87f32c06c6e81 sạch; source Android không đổi từ6a02097 đã vượt cổng emulator lịch sử. Các yêu cầu tiếp theo cho phép riêng bật ADB theo guide, dùng Terminal, chạm nút nổi và cùng kiểm tra tự chuyển camera lùi trên OEM với Owner trực tiếp thao tác số. Không mở scope code/UI, cài TN, đổi Home, direct IPC vendor, quyền nâng cao, commit/push hoặc cloud synchronization.
 

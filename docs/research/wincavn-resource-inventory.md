@@ -2,6 +2,8 @@
 
 Kiểm tra tĩnh ngày 15–16/10/2026 trên bản tài nguyên Wincavn cục bộ do người dùng cung cấp. Không cài, chạy, sửa hay tải lên các APK gốc. Bản sao này không chứng minh trạng thái ứng dụng đang cài hoặc toàn bộ firmware trên xe.
 
+Kiểm tra publication tiếp theo18/10: thư mục nguồn `C:/Users/ZGAMESVN/Downloads/Resource_For_TN_Launcher/wincavn` hiện không tồn tại trong môi trường đang chạy, nên rehash APK ở lượt này **NOT_RUN**. Các hash/quan sát bên dưới giữ đúng provenance các lần đã chạy; không tuyên bố vừa đọc lại archive, không tự tải lại hoặc thay đổi tài nguyên ngoài repo.
+
 ## Đối chiếu bản đang cài — 18/10/2026
 
 Phiên chẩn đoán được Owner cho phép: pm path, dumpsys package có mục tiêu và sha256sum đọc APK active tại chỗ, không copy APK từ xe hoặc sửa package. Bảy SHA khớp nguyên bản dưới đây; điều này chứng minh đúng bytes/version mẫu, không là proof chức năng hoặc toàn bộ firmware.
